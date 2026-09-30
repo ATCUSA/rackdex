@@ -8,10 +8,10 @@ export interface SearchResult {
 }
 
 export type WorkerRequest =
-	| { type: 'init'; records: IndexRecord[] }
+	| { type: 'init'; id: number; records: IndexRecord[] }
 	| { type: 'query'; id: number; q: string; filters: Filters };
 
-export type WorkerResponse = { type: 'ready' } | ({ type: 'result'; id: number } & SearchResult);
+export type WorkerResponse = { type: 'ready'; id: number } | ({ type: 'result'; id: number } & SearchResult);
 
 const KEYS = [
 	{ name: 'model', weight: 3 },

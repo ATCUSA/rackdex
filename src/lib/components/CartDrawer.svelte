@@ -36,8 +36,18 @@
 		}
 		return p;
 	};
+	let lastPrefetchSha: string | undefined;
 	$effect(() => {
+		// The drawer is always mounted (in +layout), so only prefetch while it's actually open,
+		// and not while the live-delta check is still in flight (data.sha would still flip).
+		if (!ui.cartOpen || data.live.state === 'checking') return;
 		const sha = data.sha;
+		// data.sha flips once (baked -> live) after the delta check resolves; the baked-sha
+		// entries are then dead weight, so drop them instead of growing the cache forever.
+		if (sha !== lastPrefetchSha) {
+			yamlCache.clear();
+			lastPrefetchSha = sha;
+		}
 		// Prefetch only; failures surface (and are retried) via the Copy/Download actions
 		// themselves, so swallow the rejection here to avoid an unhandled-rejection warning.
 		for (const r of items) cachedYaml(sha, r.id).catch(() => {});

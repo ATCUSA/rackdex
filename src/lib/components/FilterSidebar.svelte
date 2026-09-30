@@ -27,7 +27,7 @@
 	<div class="space-y-2">
 		<TriToggle label="Full depth" bind:value={filters.fullDepth} />
 		<TriToggle label="Has image" bind:value={filters.hasImage} />
-		<TriToggle label="PoE" bind:value={filters.poe} />
+		<TriToggle label="PoE (PSE)" bind:value={filters.poe} />
 		<TriToggle label="Console port" bind:value={filters.console} />
 		<TriToggle label="Power port" bind:value={filters.power} />
 		<TriToggle label="Device/module bays" bind:value={filters.bays} />

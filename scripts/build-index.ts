@@ -28,8 +28,10 @@ if (!existsSync(join(CACHE, '.git'))) {
 	console.log('[index] cloning library (YAML only)…');
 	mkdirSync(dirname(CACHE), { recursive: true });
 	git(['clone', '--filter=blob:none', '--no-checkout', '--depth', '1', REPO, CACHE], ROOT);
-	git(['sparse-checkout', 'set', ...TYPE_DIRS]);
 }
+// Cheap even when already set, and keeps the checkout scoped to the type dirs if TYPE_DIRS
+// ever changes on an existing cache instead of only on first clone.
+git(['sparse-checkout', 'set', ...TYPE_DIRS]);
 console.log(`[index] fetching ${REF}…`);
 git(['fetch', '--depth', '1', '--filter=blob:none', 'origin', REF]);
 git(['checkout', '--force', '--detach', 'FETCH_HEAD']);
@@ -49,13 +51,15 @@ if (errors.length > files.length * 0.01) {
 	process.exit(1);
 }
 
-mkdirSync(dirname(OUT), { recursive: true });
-writeFileSync(OUT, JSON.stringify(index));
-const size = statSync(OUT).size;
-if (size > MAX_BYTES) {
-	console.error(`[index] index.json is ${(size / 1e6).toFixed(1)} MB (> 20 MB limit)`);
+const json = JSON.stringify(index);
+const byteLength = Buffer.byteLength(json);
+if (byteLength > MAX_BYTES) {
+	console.error(`[index] index.json would be ${(byteLength / 1e6).toFixed(1)} MB (> 20 MB limit) — not writing`);
 	process.exit(1);
 }
+mkdirSync(dirname(OUT), { recursive: true });
+writeFileSync(OUT, json);
+const size = statSync(OUT).size;
 const c = index.meta.counts;
 console.log(
 	`[index] ${sha.slice(0, 7)} (${date}): ${c.device} device, ${c.module} module, ${c.rack} rack types, ` +

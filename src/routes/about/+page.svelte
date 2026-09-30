@@ -30,7 +30,7 @@
 			<ol class="list-decimal space-y-1 pl-5">
 				<li>Make sure the manufacturer exists (Devices → Manufacturers). The name must match the YAML's <code>manufacturer</code> exactly — use the manufacturer helper to copy it or its CSV.</li>
 				<li>Copy or download the YAML for a type, or add several to your selection and export them combined.</li>
-				<li>In NetBox go to Devices → Device Types → Import (or Module Types / Rack Types), paste the YAML or upload the file, and submit.</li>
+				<li>In NetBox go to Devices → Device Types → Import (or Devices → Module Types → Import; rack types live under Racks → Rack Types → Import), paste the YAML or upload the file, and submit.</li>
 			</ol>
 		</section>
 

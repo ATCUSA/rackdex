@@ -23,10 +23,15 @@ pnpm index      # refresh the index from upstream master
 - Framework preset: none
 - Build command: `pnpm build`
 - Build output directory: `build`
-- Environment variable: `NODE_VERSION=22` (or newer)
+- Environment variables: `NODE_VERSION=22` (or newer) and `PNPM_VERSION=11.17.0` —
+  Cloudflare Pages may not honour `packageManager` in `package.json`, and this repo
+  requires pnpm 11 (lockfile v9, `allowBuilds` in `pnpm-workspace.yaml`).
 
 No scheduled rebuilds are needed: the browser applies upstream changes live via one GitHub compare API call.
 Redeploy occasionally to refresh the baseline (the header badge shows "Data from …" when a rebuild is recommended).
+
+Note: the first real Cloudflare Pages deploy should be checked by hand to confirm the
+pinned pnpm version is actually picked up.
 
 ## Develop
 

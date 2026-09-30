@@ -96,7 +96,11 @@ export function parseRecord(path: string, text: string, images: Set<string>): In
 		if (!raw || typeof raw !== 'object') continue;
 		const i = raw as Record<string, unknown>;
 		const type = str(i.type) ?? '';
-		if (i.poe_mode || i.poe_type) poe = true;
+		// poe means PoE *source* (PSE), not just PoE-capable: an interface with poe_mode: pse is
+		// a source, and one with a poe_type but no explicit poe_mode: pd is assumed a source too.
+		// An interface with poe_mode: pd (a powered device, e.g. an AP or phone port) is not.
+		const poeMode = str(i.poe_mode);
+		if (poeMode === 'pse' || (i.poe_type !== undefined && poeMode !== 'pd')) poe = true;
 		const g = speedGroup(type);
 		if (g) speeds.add(g);
 		if (isPhysical(type) && i.mgmt_only !== true) dataIfaces++;

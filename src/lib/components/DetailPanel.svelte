@@ -49,7 +49,7 @@
 				['Form factor', r.formFactor],
 				['Width', r.width !== undefined ? `${r.width}"` : undefined],
 				['Speeds', r.speeds.join(', ') || undefined],
-				['PoE', r.poe ? 'Yes' : undefined]
+				['PoE (PSE)', r.poe ? 'Yes' : undefined]
 			] as [string, string | undefined][]
 		).filter((row): row is [string, string] => row[1] !== undefined)
 	);

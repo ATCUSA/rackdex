@@ -18,9 +18,15 @@
 	const end = $derived(Math.min(records.length, Math.ceil((scrollTop + height) / ROW) + OVERSCAN));
 	const visible = $derived(records.slice(start, end));
 
-	// Jump back to the top whenever the result set changes.
+	// Jump back to the top only when the result set actually changes — not merely when the
+	// `records` array is a new reference (e.g. the live index swapping in the same ids), which
+	// would otherwise yank the scroll position out from under the user. A cheap signature
+	// (length + first/last id) stands in for a full id-list comparison.
+	const signature = $derived(records.length ? `${records.length}:${records[0].id}:${records.at(-1)!.id}` : '0');
+	let lastSignature: string | undefined;
 	$effect(() => {
-		void records;
+		if (signature === lastSignature) return;
+		lastSignature = signature;
 		if (viewport) viewport.scrollTop = 0;
 		scrollTop = 0;
 	});

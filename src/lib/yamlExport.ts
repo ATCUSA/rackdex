@@ -24,7 +24,7 @@ export function manufacturerSlug(name: string): string {
 		.replace(/^[-_]+|[-_]+$/g, '');
 }
 
-const csvCell = (v: string) => (/[",\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
+const csvCell = (v: string) => (/[",\r\n]/.test(v) ? `"${v.replace(/"/g, '""')}"` : v);
 
 export function manufacturerCsv(names: string[]): string {
 	const unique = [...new Set(names)].sort((a, b) => a.localeCompare(b));

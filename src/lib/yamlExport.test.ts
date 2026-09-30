@@ -28,6 +28,10 @@ test('manufacturerCsv dedupes, sorts and quotes', () => {
 	);
 });
 
+test('manufacturerCsv quotes a bare carriage return too, not just \\n', () => {
+	expect(manufacturerCsv(['Acme\rCorp'])).toBe('name,slug\n"Acme\rCorp",acme-corp\n');
+});
+
 test('yamlFilename', () => {
 	expect(yamlFilename('device-types/Cisco/C9300-48P.yaml')).toBe('C9300-48P.yaml');
 });

@@ -108,6 +108,29 @@ describe('parseRecord', () => {
 		});
 	});
 
+	test('poe is true only for a PoE source (PSE), not a powered device (PD)', () => {
+		const pd = parseRecord(
+			'device-types/Acme/ap.yaml',
+			'model: AP\ninterfaces:\n  - name: eth0\n    type: 1000base-t\n    poe_mode: pd\n    poe_type: type2-ieee802.3at\n',
+			new Set()
+		);
+		expect(pd.poe).toBe(false);
+
+		const pse = parseRecord(
+			'device-types/Acme/switch.yaml',
+			'model: SW\ninterfaces:\n  - name: eth0\n    type: 1000base-t\n    poe_mode: pse\n',
+			new Set()
+		);
+		expect(pse.poe).toBe(true);
+
+		const typeOnly = parseRecord(
+			'device-types/Acme/injector.yaml',
+			'model: Injector\ninterfaces:\n  - name: eth0\n    type: 1000base-t\n    poe_type: type1-ieee802.3af\n',
+			new Set()
+		);
+		expect(typeOnly.poe).toBe(true);
+	});
+
 	test('module type uses file stem for images and has no category', () => {
 		const r = parseRecord('module-types/Cisco/A9K-16X100GE-TR.yaml', MODULE, images);
 		expect(r.kind).toBe('module');

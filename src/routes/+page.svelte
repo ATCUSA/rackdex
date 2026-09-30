@@ -24,8 +24,10 @@
 	let searching = $state(true);
 	let showFilters = $state(false);
 	let engineVersion = $state(0);
+	let searchError = $state<string | null>(null);
 
 	const client = new SearchClient();
+	client.onerror = () => (searchError = 'Search engine failed to start');
 	onDestroy(() => client.destroy());
 
 	// (Re)build the search engine whenever the index changes (baked, then live).
@@ -110,6 +112,11 @@
 					<div class="m-6 rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm">
 						<p>{data.error}</p>
 						<button type="button" class="mt-2 text-sky-500 hover:underline" onclick={() => data.load()}>Retry</button>
+					</div>
+				{:else if searchError}
+					<div class="m-6 rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm">
+						<p>{searchError}</p>
+						<button type="button" class="mt-2 text-sky-500 hover:underline" onclick={() => location.reload()}>Retry</button>
 					</div>
 				{:else if !data.index}
 					<p class="m-6 inline-flex items-center gap-2 text-sm text-zinc-500"><LoaderCircle class="size-4 animate-spin" /> Loading index…</p>
