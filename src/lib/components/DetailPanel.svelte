@@ -13,8 +13,10 @@
 
 	let { record: r, onclose }: { record: IndexRecord; onclose: () => void } = $props();
 
-	// The panel is remounted per record (see {#key} in +page.svelte), so sha is fixed.
-	const sha = data.sha;
+	// Reactive: if the panel is open before the live-delta check resolves (e.g. via a
+	// deep link), data.sha flips from the baked SHA to the live head SHA, and this must
+	// re-run the YAML-fetch effect below so it re-fetches from the live head.
+	const sha = $derived(data.sha);
 	let yaml = $state<string | null>(null);
 	let yamlError = $state<string | null>(null);
 	let attempt = $state(0);
