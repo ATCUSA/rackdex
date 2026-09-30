@@ -7,7 +7,7 @@
 Search the entire [NetBox Device Type Library](https://github.com/netbox-community/devicetype-library) in your browser,
 then copy import-ready YAML into NetBox in one click.
 
-**[rackdex.acole.dev](https://rackdex.acole.dev)**
+**[rackdex.acole.dev](https://rackdex.acole.dev)** · [Report an issue](https://github.com/ATCUSA/rackdex/issues)
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: CC0-1.0](https://img.shields.io/badge/data-CC0--1.0-lightgrey.svg)](https://github.com/netbox-community/devicetype-library/blob/master/LICENSE.txt)
@@ -35,6 +35,7 @@ It runs entirely in your browser: there are no accounts or tracking, and no serv
 - [Privacy](#privacy)
 - [Self-hosting](#self-hosting)
 - [How it works](#how-it-works)
+- [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Credits and license](#credits-and-license)
 
@@ -114,8 +115,8 @@ RackDex only displays the library. Please fix it upstream: see the library's
 shows up in RackDex automatically once it's merged.
 
 **Can RackDex push types straight into my NetBox?**
-Not yet. It's on the wishlist. NetBox's API needs each component created separately, so it's more involved than
-pasting YAML.
+Not yet, but it's first on the [roadmap](#roadmap). NetBox's API needs each component created separately, so it's
+more involved than pasting YAML.
 
 ## Privacy
 
@@ -133,7 +134,7 @@ in `.cache/`) and writes a ~6 MB search index. The rack images are never downloa
 **Requirements:** Node 22+ and [pnpm](https://pnpm.io) 11.
 
 ```bash
-git clone <this repo> rackdex && cd rackdex
+git clone https://github.com/ATCUSA/rackdex.git && cd rackdex
 pnpm install
 pnpm dev          # builds the index on first run → http://localhost:5173
 ```
@@ -182,6 +183,21 @@ Any other static host works the same way: serve the `build/` directory.
 
 **Stack:** SvelteKit (static adapter) · Svelte 5 · TypeScript · Tailwind CSS v4 · Lucide icons · Fuse.js ·
 Vitest · Playwright
+
+## Roadmap
+
+Ideas for future versions, roughly in priority order. Nothing here is promised; open an issue if one matters to you.
+
+- **Send to NetBox.** Push your selection straight into a NetBox instance over its API instead of copying YAML:
+  create any missing manufacturers, then the device/module/rack types, then all their components (interfaces,
+  console and power ports, front/rear ports, bays). It would use your own NetBox API token, which stays in your
+  browser, and needs CORS enabled on your NetBox, or a small optional helper if you can't change that.
+- **Already-in-NetBox check.** Connect read-only to your NetBox and mark which types you already have, so you only
+  import what's missing.
+- **What's new upstream.** A view of types recently added or changed in the library.
+- **Port media filters.** Filter by connector as well as speed (RJ45, SFP+, SFP28, QSFP28, fiber vs copper) and by
+  port counts per media type.
+- **Side-by-side compare.** Compare two or three types: ports, power, height, weight and airflow.
 
 ## Contributing
 
