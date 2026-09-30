@@ -3,6 +3,7 @@
 	import { onDestroy } from 'svelte';
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
+	import DetailPanel from '$lib/components/DetailPanel.svelte';
 	import FilterSidebar from '$lib/components/FilterSidebar.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import ResultsList from '$lib/components/ResultsList.svelte';
@@ -63,6 +64,7 @@
 	const results = $derived(
 		resultIds.map((id) => data.byId.get(id)).filter((r): r is IndexRecord => r !== undefined)
 	);
+	const openRecord = $derived(openId ? data.byId.get(openId) : undefined);
 	const open = (r: IndexRecord) => (openId = r.id);
 </script>
 
@@ -117,3 +119,9 @@
 		</main>
 	</div>
 </div>
+
+{#if openRecord}
+	{#key openRecord.id}
+		<DetailPanel record={openRecord} onclose={() => (openId = undefined)} />
+	{/key}
+{/if}

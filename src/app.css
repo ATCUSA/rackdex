@@ -9,3 +9,15 @@
 .dark {
 	color-scheme: dark;
 }
+
+.yaml .hljs-attr { color: var(--color-sky-700); }
+.yaml .hljs-string { color: var(--color-emerald-700); }
+.yaml .hljs-number,
+.yaml .hljs-literal { color: var(--color-amber-700); }
+.yaml .hljs-comment,
+.yaml .hljs-meta,
+.yaml .hljs-bullet { color: var(--color-zinc-500); }
+.dark .yaml .hljs-attr { color: var(--color-sky-400); }
+.dark .yaml .hljs-string { color: var(--color-emerald-400); }
+.dark .yaml .hljs-number,
+.dark .yaml .hljs-literal { color: var(--color-amber-400); }
