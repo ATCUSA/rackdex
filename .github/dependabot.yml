@@ -10,6 +10,10 @@ updates:
       dependencies:
         dependency-type: production
     open-pull-requests-limit: 5
+    ignore:
+      # svelte-check supports TypeScript <= 6; revisit when it supports 7
+      - dependency-name: typescript
+        update-types: [version-update:semver-major]
 
   - package-ecosystem: github-actions
     directory: /
