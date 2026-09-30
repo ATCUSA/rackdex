@@ -6,3 +6,15 @@ static/data/
 .superpowers/
 test-results/
 playwright-report/
+
+# local notes / backups (never committed)
+.local-notes/
+
+# editors, OS, env, logs, AI tooling
+.claude/
+.env
+.env.*
+*.log
+.DS_Store
+.vscode/
+.idea/

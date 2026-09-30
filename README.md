@@ -206,7 +206,7 @@ src/lib/            parsing, search, filters, live updates, YAML export, stores
 src/lib/components/ UI components (search, filters, results, detail panel, selection)
 src/routes/         pages: search (/) and about (/about)
 e2e/                Playwright tests
-docs/               design spec and implementation plan
+docs/               screenshots
 ```
 
 ## Credits and license

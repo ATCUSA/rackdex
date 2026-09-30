@@ -52,7 +52,7 @@ src/lib/*.svelte.ts   app state (data, selection, theme, toasts) using Svelte 5 
 src/lib/components/   UI components
 src/routes/           pages: / (search) and /about
 e2e/                  Playwright tests
-docs/                 design spec, implementation plan, screenshots
+docs/                 screenshots
 ```
 
 Most logic lives in plain TypeScript modules in `src/lib/` with unit tests next to them, such as `parse.ts` and
