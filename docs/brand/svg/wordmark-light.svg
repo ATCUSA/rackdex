@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" role="img" aria-label="RackDex">
+  <rect x="8" y="18" width="104" height="104" rx="26" fill="#F1F5F9"/>
+  <rect x="10.2" y="20.2" width="99.6" height="99.6" rx="24" fill="none" stroke="#C5D2DE" stroke-width="2.2"/>
+  <rect x="21" y="36.5" width="9.2" height="67" rx="3" fill="#D5DEE8"/>
+  <circle cx="25.6" cy="47.5" r="2.2" fill="#7B8B9C"/>
+  <circle cx="25.6" cy="70" r="2.2" fill="#7B8B9C"/>
+  <circle cx="25.6" cy="92.5" r="2.2" fill="#7B8B9C"/>
+  <rect x="35.5" y="40" width="59" height="14.2" rx="3.4" fill="#15202C"/>
+  <rect x="35.5" y="62.9" width="59" height="14.2" rx="3.4" fill="#15202C"/>
+  <rect x="35.5" y="85.8" width="45" height="14.2" rx="3.4" fill="#15202C"/>
+  <circle cx="93.5" cy="92.9" r="6.1" fill="#E09100"/>
+  <circle cx="91.8" cy="91.2" r="2.1" fill="#FFF4C8"/>
+  <text x="136" y="88"
+        font-family="Inter, IBM Plex Sans, Noto Sans, ui-sans-serif, system-ui, sans-serif"
+        font-size="64" font-weight="800" letter-spacing="-1.6">
+    <tspan fill="#0B121B">Rack</tspan><tspan fill="#D48A00">Dex</tspan>
+  </text>
+</svg>

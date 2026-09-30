@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Boxes, Moon, Search, ShoppingCart, Sun } from '@lucide/svelte';
+	import { Moon, Search, ShoppingCart, Sun } from '@lucide/svelte';
 	import { cart } from '$lib/cart.svelte';
 	import { theme } from '$lib/theme.svelte';
 	import { ui } from '$lib/ui.svelte';
@@ -22,9 +22,10 @@
 
 <header class="shrink-0 border-b border-zinc-200 bg-zinc-50/90 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/90">
 	<div class="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-3">
-		<a href="/" class="flex shrink-0 items-center gap-2 font-semibold">
-			<Boxes class="size-5 text-sky-500" />
-			<span class="hidden sm:inline">RackDex</span>
+		<a href="/" aria-label="RackDex home" class="flex shrink-0 items-center gap-2 font-semibold">
+			<img src="/mark.svg" alt="" class="hidden size-7 dark:block" />
+			<img src="/mark-light.svg" alt="" class="size-7 dark:hidden" />
+			<span class="hidden sm:inline">Rack<span class="text-[#D18B00] dark:text-[#F3B11A]">Dex</span></span>
 		</a>
 		{#if showSearch}
 			<label class="relative flex-1">
