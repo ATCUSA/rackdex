@@ -17,11 +17,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4 # version comes from "packageManager" in package.json
+      - uses: pnpm/action-setup@v6 # version comes from "packageManager" in package.json
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .node-version
           cache: pnpm
@@ -29,7 +29,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Cache devicetype-library checkout
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .cache/devicetype-library
           key: dtl-${{ github.run_id }}
@@ -49,7 +49,7 @@ jobs:
         env:
           CI: true
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: playwright-report
