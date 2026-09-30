@@ -29,7 +29,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - name: Cache devicetype-library checkout
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: .cache/devicetype-library
           key: dtl-${{ github.run_id }}
