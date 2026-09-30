@@ -23,6 +23,7 @@ test('select two device types and export them combined', async ({ page }) => {
 	expect(text.match(/^---$/gm)).toHaveLength(2);
 
 	await drawer.getByRole('button', { name: 'Copy combined device types' }).click();
+	await expect(page.getByRole('status').filter({ hasText: 'Copied 2 device types' })).toBeVisible();
 	const clip = await page.evaluate(() => navigator.clipboard.readText());
 	expect(clip.match(/^---$/gm)).toHaveLength(2);
 

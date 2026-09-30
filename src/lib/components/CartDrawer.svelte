@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Copy, Download, LoaderCircle, Trash2, X } from '@lucide/svelte';
 	import { cart } from '$lib/cart.svelte';
-	import { copyText, downloadText } from '$lib/clipboard';
+	import { copyLater, downloadText } from '$lib/clipboard';
 	import { data } from '$lib/data.svelte';
 	import { toast } from '$lib/toast.svelte';
 	import { IMPORT_HINTS, KIND_PLURAL, type IndexRecord, type Kind } from '$lib/types';
@@ -29,13 +29,18 @@
 		let p = yamlCache.get(key);
 		if (!p) {
 			p = fetchYaml(sha, id);
+			// A failed fetch must not poison the cache forever — evict so the next attempt
+			// (e.g. after the user retries) refetches instead of replaying the same rejection.
+			p.catch(() => yamlCache.delete(key));
 			yamlCache.set(key, p);
 		}
 		return p;
 	};
 	$effect(() => {
 		const sha = data.sha;
-		for (const r of items) cachedYaml(sha, r.id);
+		// Prefetch only; failures surface (and are retried) via the Copy/Download actions
+		// themselves, so swallow the rejection here to avoid an unhandled-rejection warning.
+		for (const r of items) cachedYaml(sha, r.id).catch(() => {});
 	});
 
 	const combined = (g: Group) => Promise.all(g.items.map((r) => cachedYaml(data.sha, r.id))).then(combineYaml);
@@ -53,11 +58,7 @@
 
 	const copyGroup = (g: Group) =>
 		run(`copy-${g.kind}`, async () => {
-			// Items are pre-fetched by the $effect above, so this normally resolves immediately;
-			// writeText (vs. a Blob-based ClipboardItem write) also completes without the extra
-			// IPC hop that a promise-based ClipboardItem write needs.
-			const text = await combined(g);
-			if (await copyText(text)) toast(`Copied ${g.items.length} ${KIND_PLURAL[g.kind].toLowerCase()}`);
+			if (await copyLater(combined(g))) toast(`Copied ${g.items.length} ${KIND_PLURAL[g.kind].toLowerCase()}`);
 			else toast('Copy failed — use Download instead', 'error');
 		});
 
