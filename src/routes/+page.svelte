@@ -5,6 +5,7 @@
 	import { page } from '$app/state';
 	import DetailPanel from '$lib/components/DetailPanel.svelte';
 	import FilterSidebar from '$lib/components/FilterSidebar.svelte';
+	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
 	import ResultsList from '$lib/components/ResultsList.svelte';
 	import { data } from '$lib/data.svelte';
@@ -73,8 +74,9 @@
 <div class="flex h-dvh flex-col">
 	<Header bind:query />
 	<div class="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1">
-		<aside class="hidden w-72 shrink-0 overflow-y-auto border-r border-zinc-200 p-4 lg:block dark:border-zinc-800">
+		<aside class="hidden w-72 shrink-0 flex-col overflow-y-auto border-r border-zinc-200 p-4 lg:flex dark:border-zinc-800">
 			<FilterSidebar bind:filters {facets} />
+			<div class="mt-auto pt-8"><Footer /></div>
 		</aside>
 
 		{#if showFilters}
@@ -85,6 +87,7 @@
 						<X class="size-5" />
 					</button>
 					<FilterSidebar bind:filters {facets} />
+					<div class="pt-8"><Footer /></div>
 				</div>
 			</div>
 		{/if}
