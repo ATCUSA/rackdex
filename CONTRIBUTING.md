@@ -78,7 +78,7 @@ Most logic lives in plain TypeScript modules in `src/lib/` with unit tests next 
 - **Mind the constraints:**
   - The site must stay fully static.
   - The browser may make at most one `api.github.com` request per page load.
-  - Never copy YAML or images into `build/` (Cloudflare Pages has a 20,000-file limit).
+  - Never copy YAML or images into `build/` (Cloudflare limits a deployment to 20,000 files).
   - Anything that shows an inferred category must say it is inferred.
 - **Credit stays.** The attribution to the devicetype-library maintainers and contributors must not be removed.
 - Update `CHANGELOG.md` under **Unreleased** if your change is user-visible.

@@ -1,0 +1,11 @@
+{
+	"$schema": "https://unpkg.com/wrangler@4/config-schema.json",
+	"name": "rackdex",
+	"compatibility_date": "2026-09-30",
+	// Static site only: no Worker script. `pnpm build` writes the site to ./build.
+	"assets": {
+		"directory": "./build",
+		// Unknown URLs get build/404.html (the SvelteKit fallback, which renders the error page) with a 404 status.
+		"not_found_handling": "404-page"
+	}
+}

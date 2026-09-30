@@ -6,6 +6,11 @@ All notable changes to RackDex are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Deploy as a static-assets Cloudflare Worker (`wrangler.jsonc`).
+- Friendly "Page not found" page for unknown URLs.
+
 ## [0.1.0] - 2026-09-30
 
 First public release.
