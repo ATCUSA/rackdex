@@ -185,8 +185,8 @@ Vitest · Playwright
 
 ## Contributing
 
-Issues and pull requests are welcome. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for setup, checks and guidelines,
-and please follow the [Code of Conduct](CODE_OF_CONDUCT.md). For problems with **device data**, go to the
+Issues and pull requests are welcome. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for the ground rules, setup, checks
+and PR workflow. For problems with **device data**, go to the
 [devicetype-library](https://github.com/netbox-community/devicetype-library) instead; RackDex just displays it.
 Security issues: see [SECURITY.md](SECURITY.md). Release history: [CHANGELOG.md](CHANGELOG.md).
 
