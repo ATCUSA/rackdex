@@ -4,3 +4,5 @@ build/
 .cache/
 static/data/
 .superpowers/
+test-results/
+playwright-report/
