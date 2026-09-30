@@ -22,6 +22,11 @@
 		].filter(Boolean)
 	);
 	const chip = $derived(r.kind === 'device' ? CATEGORY_LABELS[r.category ?? 'other'] : KIND_LABELS[r.kind]);
+	// Categories are inferred from component counts, never a stated field — surface that in the
+	// chip's tooltip/accessible name without cluttering the compact visible text. Kind chips
+	// (module/rack) are stated data, not inferred, so they're left unchanged.
+	const chipTitle = $derived(r.kind === 'device' ? `${chip} (inferred from components)` : undefined);
+	const chipAriaLabel = $derived(r.kind === 'device' ? `${chip} (inferred)` : undefined);
 </script>
 
 <div
@@ -54,7 +59,12 @@
 			</div>
 			<div class="truncate text-xs text-zinc-500">{[r.vendor, ...specs].join(' · ')}</div>
 		</div>
-		<span class="hidden shrink-0 rounded-full bg-zinc-200 px-2 py-0.5 text-xs text-zinc-700 sm:inline dark:bg-zinc-800 dark:text-zinc-300">{chip}</span>
+		<span
+			title={chipTitle}
+			aria-label={chipAriaLabel}
+			class="hidden shrink-0 rounded-full bg-zinc-200 px-2 py-0.5 text-xs text-zinc-700 sm:inline dark:bg-zinc-800 dark:text-zinc-300"
+			>{chip}</span
+		>
 		{#if r.images.front || r.images.rear}
 			<ImageIcon class="size-4 shrink-0 text-zinc-400" aria-label="Has elevation image" />
 		{/if}
