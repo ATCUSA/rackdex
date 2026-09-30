@@ -146,19 +146,30 @@ pnpm preview      # serve that build locally
 
 To index a specific branch or commit of the library, set `DTL_REF`, for example `DTL_REF=<branch-or-sha> pnpm index`.
 
-### Cloudflare Pages
+### Cloudflare Workers (recommended)
 
-| Setting | Value |
-|---|---|
-| Framework preset | None |
-| Build command | `pnpm build` |
-| Build output directory | `build` |
-| Environment variables | `NODE_VERSION=22`, `PNPM_VERSION=11.17.0` |
+RackDex deploys as a static-assets-only Worker; the config is already in [`wrangler.jsonc`](wrangler.jsonc).
 
-The output is about 20 files, well within Pages' limits. You don't need scheduled rebuilds, since visitors get
-upstream changes live. Redeploy occasionally to refresh the baseline, which makes the first load a little faster.
+1. In the Cloudflare dashboard, go to **Workers & Pages → Create → Import a repository** and pick your fork.
+2. Use these build settings:
 
-Any other static host works the same way: serve the `build/` directory.
+   | Setting | Value |
+   |---|---|
+   | Build command | `pnpm build` |
+   | Deploy command | `npx wrangler deploy` |
+   | Build variables | `NODE_VERSION=22`, `PNPM_VERSION=11.17.0` |
+
+3. Optionally, add a custom domain under the Worker's **Settings → Domains & Routes**.
+
+Every push to `main` deploys, and pull requests get preview URLs. The site is about 20 files, well within the limits,
+and requests for static assets are free. You don't need scheduled rebuilds, since visitors get upstream changes live;
+redeploy occasionally to refresh the baseline, which makes the first load a little faster.
+
+To deploy from your own machine instead, run `pnpm build && npx wrangler deploy` (wrangler asks you to log in the
+first time).
+
+Cloudflare Pages, Netlify, GitHub Pages, nginx or any other static host work too: serve the `build/` directory and use
+`build/404.html` as the not-found page.
 
 ## How it works
 

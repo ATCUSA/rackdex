@@ -18,3 +18,4 @@ playwright-report/
 .DS_Store
 .vscode/
 .idea/
+.wrangler/
