@@ -1,6 +1,11 @@
 <div align="center">
 
-# 🗄️ RackDex
+<h1>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/brand/wordmark-dark.png">
+    <img src="docs/brand/wordmark-light.png" alt="RackDex" width="420">
+  </picture>
+</h1>
 
 **Gotta rack 'em all.**
 
@@ -233,7 +238,7 @@ src/lib/            parsing, search, filters, live updates, YAML export, stores
 src/lib/components/ UI components (search, filters, results, detail panel, selection)
 src/routes/         pages: search (/) and about (/about)
 e2e/                Playwright tests
-docs/               screenshots
+docs/               screenshots and brand assets (logo, wordmarks, social image)
 ```
 
 ## Credits and license

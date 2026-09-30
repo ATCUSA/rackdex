@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="RackDex">
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="#F1F5F9"/>
+  <rect x="5.2" y="5.2" width="53.6" height="53.6" rx="12.8" fill="none" stroke="#C5D2DE" stroke-width="1.2"/>
+  <rect x="11" y="14" width="5" height="36" rx="1.6" fill="#D5DEE8"/>
+  <circle cx="13.5" cy="20" r="1.2" fill="#7B8B9C"/>
+  <circle cx="13.5" cy="32" r="1.2" fill="#7B8B9C"/>
+  <circle cx="13.5" cy="44" r="1.2" fill="#7B8B9C"/>
+  <rect x="19.2" y="16" width="32" height="7.6" rx="1.9" fill="#15202C"/>
+  <rect x="19.2" y="28.2" width="32" height="7.6" rx="1.9" fill="#15202C"/>
+  <rect x="19.2" y="40.4" width="24.4" height="7.6" rx="1.9" fill="#15202C"/>
+  <circle cx="50.2" cy="44.2" r="3.3" fill="#E09100"/>
+  <circle cx="49.3" cy="43.3" r="1.15" fill="#FFF4C8"/>
+</svg>

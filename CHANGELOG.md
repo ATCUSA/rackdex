@@ -10,6 +10,7 @@ All notable changes to RackDex are documented here. The format follows
 
 - Deploy as a static-assets Cloudflare Worker (`wrangler.jsonc`).
 - Friendly "Page not found" page for unknown URLs.
+- RackDex logo, favicons (SVG/ICO/Apple/Android), web app manifest and social preview image.
 
 ## [0.1.0] - 2026-09-30
 
