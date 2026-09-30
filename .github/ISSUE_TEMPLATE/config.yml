@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Wrong or missing device, module or rack type
+    url: https://github.com/netbox-community/devicetype-library/issues
+    about: RackDex displays the NetBox Device Type Library. Data fixes go upstream and appear here automatically.

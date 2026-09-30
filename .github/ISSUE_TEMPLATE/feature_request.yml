@@ -1,0 +1,21 @@
+name: Feature request
+description: Suggest an idea for RackDex
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the problem or workflow, not just the solution. For example, "I import 30 PDUs at a time and…"
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+      description: How you imagine it working.
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Alternatives you've tried, screenshots, links.

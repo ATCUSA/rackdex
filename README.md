@@ -13,6 +13,10 @@ then copy import-ready YAML into NetBox in one click.
 [![Data: CC0-1.0](https://img.shields.io/badge/data-CC0--1.0-lightgrey.svg)](https://github.com/netbox-community/devicetype-library/blob/master/LICENSE.txt)
 [![Built with SvelteKit](https://img.shields.io/badge/built%20with-SvelteKit-ff3e00.svg)](https://svelte.dev)
 
+<br>
+
+![RackDex detail panel showing a Cisco Catalyst 9300-48P with specs, front and rear rack images, and Copy YAML button](docs/screenshot.png)
+
 </div>
 
 ---
@@ -48,6 +52,10 @@ It runs entirely in your browser: there are no accounts or tracking, and no serv
 - **Always current.** Changes made upstream since the last deploy are picked up automatically when you load the page.
 - **Shareable links.** Your search, filters and the open type are saved in the URL.
 - **Dark mode by default**, with a light theme toggle. It works on mobile too.
+
+<p align="center">
+  <img src="docs/screenshot-search.png" alt="RackDex search results filtered to Cisco and Juniper PoE switches, with vendor and interface-speed filters and counts" width="860">
+</p>
 
 ## Using RackDex
 
@@ -177,8 +185,10 @@ Vitest · Playwright
 
 ## Contributing
 
-Issues and pull requests are welcome. For problems with **device data**, please go to the
+Issues and pull requests are welcome. See **[CONTRIBUTING.md](CONTRIBUTING.md)** for setup, checks and guidelines,
+and please follow the [Code of Conduct](CODE_OF_CONDUCT.md). For problems with **device data**, go to the
 [devicetype-library](https://github.com/netbox-community/devicetype-library) instead; RackDex just displays it.
+Security issues: see [SECURITY.md](SECURITY.md). Release history: [CHANGELOG.md](CHANGELOG.md).
 
 ```bash
 pnpm install

@@ -1,0 +1,40 @@
+name: Bug report
+description: Something in the RackDex app doesn't work right
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **Wrong or missing device data?** Please report that upstream at
+        [netbox-community/devicetype-library](https://github.com/netbox-community/devicetype-library/issues).
+        RackDex only displays that data.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: url
+    attributes:
+      label: Link
+      description: Paste the RackDex URL from your address bar. It contains your search and filters.
+      placeholder: https://rackdex.acole.dev/?q=...
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      placeholder: Firefox 131 on Windows 11
+    validations:
+      required: true
+  - type: input
+    id: badge
+    attributes:
+      label: Header badge
+      description: What does the badge next to the search box say? (Up to date / Live · N updates / Data from …)
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: Screenshots, errors from the browser console (F12), etc.
