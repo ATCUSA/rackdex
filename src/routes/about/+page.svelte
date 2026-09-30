@@ -6,7 +6,7 @@
 	const link = 'text-sky-600 hover:underline dark:text-sky-400';
 </script>
 
-<svelte:head><title>About · NetBox Device Type Finder</title></svelte:head>
+<svelte:head><title>About · RackDex</title></svelte:head>
 
 <div class="flex min-h-dvh flex-col">
 	<Header showSearch={false} />

@@ -24,7 +24,7 @@
 	<div class="mx-auto flex max-w-[1600px] items-center gap-3 px-4 py-3">
 		<a href="/" class="flex shrink-0 items-center gap-2 font-semibold">
 			<Boxes class="size-5 text-sky-500" />
-			<span class="hidden sm:inline">Device Type Finder</span>
+			<span class="hidden sm:inline">RackDex</span>
 		</a>
 		{#if showSearch}
 			<label class="relative flex-1">

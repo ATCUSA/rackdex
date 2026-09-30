@@ -71,7 +71,7 @@
 	const open = (r: IndexRecord) => (openId = r.id);
 </script>
 
-<svelte:head><title>NetBox Device Type Finder</title></svelte:head>
+<svelte:head><title>RackDex — NetBox device type search</title></svelte:head>
 
 <div class="flex h-dvh flex-col">
 	<Header bind:query />
