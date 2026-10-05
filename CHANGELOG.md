@@ -12,6 +12,7 @@ All notable changes to RackDex are documented here. The format follows
 - Friendly "Page not found" page for unknown URLs.
 - RackDex logo, favicons (SVG/ICO/Apple/Android), web app manifest and social preview image.
 - `robots.txt` and `sitemap.xml` so search engines can find the site.
+- Daily workflow that rebuilds and deploys when the device type library changes.
 
 ## [0.1.0] - 2026-09-30
 

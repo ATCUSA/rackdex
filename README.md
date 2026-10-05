@@ -167,8 +167,17 @@ RackDex deploys as a static-assets-only Worker; the config is already in [`wrang
 3. Optionally, add a custom domain under the Worker's **Settings → Domains & Routes**.
 
 Every push to `main` deploys, and pull requests get preview URLs. The site is about 20 files, well within the limits,
-and requests for static assets are free. You don't need scheduled rebuilds, since visitors get upstream changes live;
-redeploy occasionally to refresh the baseline, which makes the first load a little faster.
+and requests for static assets are free. Visitors get upstream changes live, so rebuilds only refresh the baseline,
+which makes the first load a little faster.
+
+The [Refresh data](.github/workflows/refresh-data.yml) workflow does this once a day: if the library has new commits
+since the last deploy, it rebuilds, runs the tests and deploys with wrangler. It needs two repository secrets:
+
+- `CLOUDFLARE_API_TOKEN`: an API token made from the **Edit Cloudflare Workers** template.
+- `CLOUDFLARE_ACCOUNT_ID`: your account ID, shown on the Workers & Pages overview page.
+
+You can also run it by hand from the Actions tab, with an option to deploy even if nothing changed. It checks the
+deployed site at `rackdex.acole.dev`, so change that URL in the workflow if you deploy elsewhere.
 
 To deploy from your own machine instead, run `pnpm build && npx wrangler deploy` (wrangler asks you to log in the
 first time).
