@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rackdex.acole.dev/sitemap.xml
