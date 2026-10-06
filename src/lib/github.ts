@@ -12,3 +12,8 @@ export const commitUrl = (sha: string) => `${REPO_URL}/commit/${sha}`;
 
 export const compareUrl = (base: string, head = 'master') =>
 	`https://api.github.com/repos/${REPO}/compare/${base}...${head}`;
+
+/** RackDex's own repository (as opposed to the device type library above). */
+export const SITE_REPO = 'ATCUSA/rackdex';
+export const SITE_REPO_URL = `https://github.com/${SITE_REPO}`;
+export const SITE_REPO_API_URL = `https://api.github.com/repos/${SITE_REPO}`;

@@ -11,6 +11,14 @@ test('main page credits the library', async ({ page }) => {
 		'https://github.com/netbox-community/devicetype-library'
 	);
 	await expect(footer).toContainText('Unofficial');
+	await expect(footer.getByRole('link', { name: 'source on GitHub' })).toHaveAttribute('href', 'https://github.com/ATCUSA/rackdex');
+});
+
+test('header links to the RackDex repo with its star count', async ({ page }) => {
+	await page.goto('/');
+	const link = page.getByTestId('repo-link');
+	await expect(link).toHaveAttribute('href', 'https://github.com/ATCUSA/rackdex');
+	await expect(link.getByTestId('star-count')).toHaveText('42');
 });
 
 test('about page explains the app and credits contributors', async ({ page }) => {

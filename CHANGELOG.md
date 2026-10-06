@@ -13,6 +13,9 @@ All notable changes to RackDex are documented here. The format follows
 - RackDex logo, favicons (SVG/ICO/Apple/Android), web app manifest and social preview image.
 - `robots.txt` and `sitemap.xml` so search engines can find the site.
 - Daily workflow that rebuilds and deploys when the device type library changes.
+- Link to the RackDex repo in the header (with its star count) and footer.
+- `data/meta.json` with the library commit, date and counts, used by the README's "library synced" badge.
+- CI and "library synced" badges in the README.
 
 ### Changed
 

@@ -4,6 +4,7 @@
 	import { theme } from '#lib/theme.svelte';
 	import { ui } from '#lib/ui.svelte';
 	import LiveBadge from './LiveBadge.svelte';
+	import RepoLink from './RepoLink.svelte';
 
 	let { query = $bindable(''), showSearch = true }: { query?: string; showSearch?: boolean } = $props();
 	let input: HTMLInputElement | undefined = $state();
@@ -43,6 +44,7 @@
 			<div class="flex-1"></div>
 		{/if}
 		<LiveBadge />
+		<RepoLink />
 		<button type="button" class={iconBtn} onclick={() => theme.toggle()} aria-label="Toggle theme">
 			{#if theme.dark}<Sun class="size-5" />{:else}<Moon class="size-5" />{/if}
 		</button>

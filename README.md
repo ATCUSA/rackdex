@@ -17,6 +17,8 @@ then copy import-ready YAML into NetBox in one click.
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Data: CC0-1.0](https://img.shields.io/badge/data-CC0--1.0-lightgrey.svg)](https://github.com/netbox-community/devicetype-library/blob/master/LICENSE.txt)
 [![Built with SvelteKit](https://img.shields.io/badge/built%20with-SvelteKit-ff3e00.svg)](https://svelte.dev)
+[![CI](https://github.com/ATCUSA/rackdex/actions/workflows/ci.yml/badge.svg)](https://github.com/ATCUSA/rackdex/actions/workflows/ci.yml)
+[![Library synced](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Frackdex.acole.dev%2Fdata%2Fmeta.json&query=%24.synced&label=library%20synced&color=blue&cacheSeconds=3600)](https://rackdex.acole.dev)
 
 <br>
 
@@ -126,9 +128,9 @@ more involved than pasting YAML.
 ## Privacy
 
 - No accounts, no cookies, no analytics, no ads.
-- Your browser talks only to the site itself, `api.github.com` (one change check per visit, cached for 15 minutes)
-  and `raw.githubusercontent.com` (YAML files and images).
-- Your selection, theme choice and the update cache are kept in your browser's local storage and are never sent
+- Your browser talks only to the site itself, `api.github.com` (one change check per visit, cached for 15 minutes,
+  and the RackDex star count, cached for an hour) and `raw.githubusercontent.com` (YAML files and images).
+- Your selection, theme choice, the update cache and the star count are kept in your browser's local storage and are never sent
   anywhere.
 
 ## Self-hosting
