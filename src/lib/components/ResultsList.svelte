@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { IndexRecord } from '$lib/types';
+	import type { IndexRecord } from '#lib/types';
 	import ResultRow from './ResultRow.svelte';
 
 	let {

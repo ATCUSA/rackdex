@@ -3,17 +3,17 @@
 	import { onDestroy } from 'svelte';
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
-	import DetailPanel from '$lib/components/DetailPanel.svelte';
-	import FilterSidebar from '$lib/components/FilterSidebar.svelte';
-	import Footer from '$lib/components/Footer.svelte';
-	import Header from '$lib/components/Header.svelte';
-	import ResultsList from '$lib/components/ResultsList.svelte';
-	import { data } from '$lib/data.svelte';
-	import { activeFilterCount, emptyFacets, type Facets, type Filters } from '$lib/filters';
-	import { REPO_URL } from '$lib/github';
-	import { SearchClient } from '$lib/searchClient';
-	import type { IndexRecord } from '$lib/types';
-	import { fromParams, toParams } from '$lib/urlState';
+	import DetailPanel from '#lib/components/DetailPanel.svelte';
+	import FilterSidebar from '#lib/components/FilterSidebar.svelte';
+	import Footer from '#lib/components/Footer.svelte';
+	import Header from '#lib/components/Header.svelte';
+	import ResultsList from '#lib/components/ResultsList.svelte';
+	import { data } from '#lib/data.svelte';
+	import { activeFilterCount, emptyFacets, type Facets, type Filters } from '#lib/filters';
+	import { REPO_URL } from '#lib/github';
+	import { SearchClient } from '#lib/searchClient';
+	import type { IndexRecord } from '#lib/types';
+	import { fromParams, toParams } from '#lib/urlState';
 
 	const initial = fromParams(page.url.searchParams);
 	let query = $state(initial.q);

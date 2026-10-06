@@ -1,5 +1,5 @@
 {
-	"extends": "./.svelte-kit/tsconfig.json",
+	"extends": "$app/tsconfig",
 	"compilerOptions": {
 		"allowJs": true,
 		"checkJs": true,
@@ -9,6 +9,13 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"strict": true,
-		"moduleResolution": "bundler"
-	}
+		"moduleResolution": "bundler",
+		// Same mapping as "imports" in package.json. svelte-check doesn't resolve those inside .svelte files yet.
+		"paths": {
+			"#lib": ["./src/lib"],
+			"#lib/*": ["./src/lib/*"]
+		}
+	},
+	"include": ["src", "test", "*"],
+	"exclude": ["src/service-worker"]
 }

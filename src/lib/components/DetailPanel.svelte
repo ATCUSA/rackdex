@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { Check, Copy, Download, ExternalLink, LoaderCircle, Plus, X } from '@lucide/svelte';
-	import { cart } from '$lib/cart.svelte';
-	import { CATEGORY_LABELS } from '$lib/category';
-	import { copyText, downloadText } from '$lib/clipboard';
-	import { data } from '$lib/data.svelte';
-	import { blobUrl, rawUrl } from '$lib/github';
-	import { toast } from '$lib/toast.svelte';
-	import { COMPONENT_LABELS, IMPORT_HINTS, KIND_LABELS, type ComponentKey, type IndexRecord } from '$lib/types';
-	import { fetchYaml, yamlFilename } from '$lib/yamlExport';
+	import { cart } from '#lib/cart.svelte';
+	import { CATEGORY_LABELS } from '#lib/category';
+	import { copyText, downloadText } from '#lib/clipboard';
+	import { data } from '#lib/data.svelte';
+	import { blobUrl, rawUrl } from '#lib/github';
+	import { toast } from '#lib/toast.svelte';
+	import { COMPONENT_LABELS, IMPORT_HINTS, KIND_LABELS, type ComponentKey, type IndexRecord } from '#lib/types';
+	import { fetchYaml, yamlFilename } from '#lib/yamlExport';
 	import ManufacturerHelper from './ManufacturerHelper.svelte';
 	import YamlView from './YamlView.svelte';
 

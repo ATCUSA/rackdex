@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { Copy, Download, LoaderCircle, Trash2, X } from '@lucide/svelte';
-	import { cart } from '$lib/cart.svelte';
-	import { copyLater, downloadText } from '$lib/clipboard';
-	import { data } from '$lib/data.svelte';
-	import { toast } from '$lib/toast.svelte';
-	import { IMPORT_HINTS, KIND_PLURAL, type IndexRecord, type Kind } from '$lib/types';
-	import { ui } from '$lib/ui.svelte';
-	import { combineYaml, fetchYaml } from '$lib/yamlExport';
+	import { cart } from '#lib/cart.svelte';
+	import { copyLater, downloadText } from '#lib/clipboard';
+	import { data } from '#lib/data.svelte';
+	import { toast } from '#lib/toast.svelte';
+	import { IMPORT_HINTS, KIND_PLURAL, type IndexRecord, type Kind } from '#lib/types';
+	import { ui } from '#lib/ui.svelte';
+	import { combineYaml, fetchYaml } from '#lib/yamlExport';
 	import ManufacturerHelper from './ManufacturerHelper.svelte';
 
 	const KINDS: Kind[] = ['device', 'module', 'rack'];

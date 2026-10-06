@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Check, Image as ImageIcon, Plus } from '@lucide/svelte';
-	import { cart } from '$lib/cart.svelte';
-	import { CATEGORY_LABELS } from '$lib/category';
-	import { KIND_LABELS, type IndexRecord } from '$lib/types';
+	import { cart } from '#lib/cart.svelte';
+	import { CATEGORY_LABELS } from '#lib/category';
+	import { KIND_LABELS, type IndexRecord } from '#lib/types';
 
 	let {
 		record: r,
