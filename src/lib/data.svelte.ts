@@ -31,7 +31,7 @@ class DataStore {
 		this.error = null;
 		let baked: IndexFile;
 		try {
-			const res = await fetch(asset('/data/index.json'));
+			const res = await fetch(asset('data/index.json'));
 			if (!res.ok) throw new Error(`HTTP ${res.status}`);
 			baked = await res.json();
 		} catch (e) {

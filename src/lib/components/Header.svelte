@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Moon, Search, ShoppingCart, Sun } from '@lucide/svelte';
-	import { cart } from '$lib/cart.svelte';
-	import { theme } from '$lib/theme.svelte';
-	import { ui } from '$lib/ui.svelte';
+	import { cart } from '#lib/cart.svelte';
+	import { theme } from '#lib/theme.svelte';
+	import { ui } from '#lib/ui.svelte';
 	import LiveBadge from './LiveBadge.svelte';
 
 	let { query = $bindable(''), showSearch = true }: { query?: string; showSearch?: boolean } = $props();

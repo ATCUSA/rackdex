@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { CATEGORY_LABELS } from '$lib/category';
-	import { activeFilterCount, emptyFilters, type Facets, type Filters } from '$lib/filters';
-	import { SPEED_GROUPS } from '$lib/speeds';
-	import { KIND_LABELS } from '$lib/types';
+	import { CATEGORY_LABELS } from '#lib/category';
+	import { activeFilterCount, emptyFilters, type Facets, type Filters } from '#lib/filters';
+	import { SPEED_GROUPS } from '#lib/speeds';
+	import { KIND_LABELS } from '#lib/types';
 	import FacetList from './FacetList.svelte';
 	import RangeInputs from './RangeInputs.svelte';
 	import TriToggle from './TriToggle.svelte';

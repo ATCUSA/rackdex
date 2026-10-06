@@ -14,6 +14,11 @@ All notable changes to RackDex are documented here. The format follows
 - `robots.txt` and `sitemap.xml` so search engines can find the site.
 - Daily workflow that rebuilds and deploys when the device type library changes.
 
+### Changed
+
+- Upgrade to SvelteKit 3 and adapter-static 4. Config moved from `svelte.config.js` into `vite.config.ts`, and `$lib`
+  imports are now `#lib`.
+
 ## [0.1.0] - 2026-09-30
 
 First public release.

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { manufacturerCsv, manufacturerSlug } from '$lib/yamlExport';
+	import { manufacturerCsv, manufacturerSlug } from '#lib/yamlExport';
 	import CopyButton from './CopyButton.svelte';
 
 	let { names }: { names: string[] } = $props();

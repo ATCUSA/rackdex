@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Footer from '$lib/components/Footer.svelte';
-	import Header from '$lib/components/Header.svelte';
-	import { REPO_URL } from '$lib/github';
+	import Footer from '#lib/components/Footer.svelte';
+	import Header from '#lib/components/Header.svelte';
+	import { REPO_URL } from '#lib/github';
 
 	const link = 'text-sky-600 hover:underline dark:text-sky-400';
 </script>

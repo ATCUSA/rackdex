@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { CircleAlert, CircleCheck, LoaderCircle, Radio } from '@lucide/svelte';
-	import { data } from '$lib/data.svelte';
+	import { data } from '#lib/data.svelte';
 
 	const short = (s: string) => s.slice(0, 7);
 	const fmt = (d: string) => new Date(d).toLocaleDateString();

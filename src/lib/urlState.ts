@@ -34,7 +34,7 @@ export function toParams(s: UrlState): URLSearchParams {
 	return p;
 }
 
-export function fromParams(p: URLSearchParams): UrlState {
+export function fromParams(p: Pick<URLSearchParams, 'get' | 'getAll'>): UrlState {
 	const filters = emptyFilters();
 	for (const [key, param] of Object.entries(LISTS) as [keyof typeof LISTS, string][]) {
 		const valid = VALID[key];
