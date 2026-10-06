@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { data } from '#lib/data.svelte';
-	import { commitUrl, REPO_URL } from '#lib/github';
+	import { commitUrl, REPO_URL, SITE_REPO_URL } from '#lib/github';
 
 	const link = 'text-sky-600 hover:underline dark:text-sky-400';
 </script>
@@ -12,7 +12,11 @@
 		NetBox community and
 		<a class={link} href={`${REPO_URL}/graphs/contributors`} target="_blank" rel="noopener">its contributors</a>. Thank you!
 	</p>
-	<p>Unofficial viewer — not affiliated with NetBox Labs. <a class={link} href="/about">About</a></p>
+	<p>
+		Unofficial viewer — not affiliated with NetBox Labs. RackDex is free and open source:
+		<a class={link} href={SITE_REPO_URL} target="_blank" rel="noopener">source on GitHub</a> ·
+		<a class={link} href="/about">About</a>
+	</p>
 	{#if data.index}
 		<p>
 			Index built from

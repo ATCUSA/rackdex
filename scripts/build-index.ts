@@ -59,6 +59,12 @@ if (byteLength > MAX_BYTES) {
 }
 mkdirSync(dirname(OUT), { recursive: true });
 writeFileSync(OUT, json);
+// Small summary for the README's "library synced" badge, so shields.io doesn't have to fetch the full index.
+const { sha: metaSha, date: metaDate, counts } = index.meta;
+writeFileSync(
+	join(dirname(OUT), 'meta.json'),
+	JSON.stringify({ sha: metaSha, date: metaDate, synced: metaDate.slice(0, 10), counts })
+);
 const size = statSync(OUT).size;
 const c = index.meta.counts;
 console.log(
