@@ -22,7 +22,8 @@ All notable changes to RackDex are documented here. The format follows
   theme script are allowed by hash), network and images limited to the site and GitHub, no plugins. An e2e test
   fails on any CSP violation.
 - Sort results by best match, name, height or interface count (kept in the URL as `sort=`). With a query, close
-  matches stay above loose fuzzy ones, so sorting by size doesn't bury the type you searched for.
+  matches stay above loose fuzzy ones, under an "Other matches" divider, so sorting by size doesn't bury the type
+  you searched for.
 - "New" and "Updated" badges on types that changed in the library since the site was built, with a note in the
   detail panel saying you're seeing the live version.
 - "Interfaces by type" table in the detail panel: how many of each NetBox interface type, its speed, and how many

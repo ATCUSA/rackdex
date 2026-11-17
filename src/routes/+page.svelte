@@ -27,6 +27,7 @@
 	let openId = $state<string | undefined>(initial.open);
 	let sort = $state<Sort>(initial.sort ?? 'best');
 	let resultIds = $state.raw<string[]>([]);
+	let split = $state<number | undefined>(undefined);
 	let facets = $state.raw<Facets>(emptyFacets());
 	let searching = $state(true);
 	let showFilters = $state(false);
@@ -55,6 +56,7 @@
 			const res = await client.query(q, f, s);
 			if (!res) return;
 			resultIds = res.ids;
+			split = res.split;
 			facets = res.facets;
 			searching = false;
 		}, 60);
@@ -179,7 +181,7 @@
 				{:else if results.length === 0 && !searching}
 					<p class="m-6 text-sm text-zinc-500">No types match. Try a shorter query or clear some filters.</p>
 				{:else}
-					<ResultsList records={results} onopen={open} selectedId={openId} />
+					<ResultsList records={results} onopen={open} selectedId={openId} dividerAt={results.length === resultIds.length ? split : undefined} />
 				{/if}
 			</div>
 		</main>

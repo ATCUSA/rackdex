@@ -5,6 +5,8 @@ import type { IndexRecord } from './types';
 
 export interface SearchResult {
 	ids: string[];
+	/** When a sort split the results into close and loose matches: how many close ones lead the list. */
+	split?: number;
 	facets: Facets;
 }
 
@@ -79,14 +81,22 @@ export function createSearch(records: IndexRecord[]) {
 		run(q: string, f: Filters, sort: Sort = 'best'): SearchResult {
 			const { items: base, strong } = find(q.trim());
 			let hits = base.filter((r) => matches(r, f));
+			let split: number | undefined;
 			if (sort !== 'best') {
 				hits.sort(COMPARATORS[sort]);
 				// Fuzzy matching lets in loose hits (EX2300-48MP for "C9300-48P"), and a sort by size would put
 				// them first. Keep strong matches on top, each group sorted, so the count doesn't change.
-				if (strong.size) hits = [...hits.filter((r) => strong.has(r)), ...hits.filter((r) => !strong.has(r))];
+				if (strong.size) {
+					const top = hits.filter((r) => strong.has(r));
+					if (top.length && top.length < hits.length) {
+						hits = [...top, ...hits.filter((r) => !strong.has(r))];
+						split = top.length;
+					}
+				}
 			}
 			return {
 				ids: hits.map((r) => r.id),
+				split,
 				facets: facetCounts(base, f)
 			};
 		}

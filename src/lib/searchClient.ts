@@ -30,7 +30,7 @@ export class SearchClient {
 			}
 			const resolve = this.#pending.get(msg.id);
 			this.#pending.delete(msg.id);
-			resolve?.(msg.id === this.#querySeq ? { ids: msg.ids, facets: msg.facets } : null);
+			resolve?.(msg.id === this.#querySeq ? { ids: msg.ids, facets: msg.facets, split: msg.split } : null);
 		};
 		this.#worker.onerror = () => {
 			this.#failed = true;

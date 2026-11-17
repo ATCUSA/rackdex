@@ -6,14 +6,27 @@ test.beforeEach(async ({ page }) => stubGitHub(page));
 const ifaces = (text: string) => Number(/(\d+) ifaces/.exec(text)?.[1] ?? -1);
 
 test('sort by interface count reorders results and syncs to the URL', async ({ page }) => {
-	await page.goto('/?q=C9300&kind=device');
+	await page.goto('/?q=C9300-48P&kind=device');
 	await expect(page.getByRole('listitem').first()).toBeVisible();
 	await page.getByRole('combobox', { name: 'Sort results' }).selectOption('if-desc');
 	await expect(page).toHaveURL(/sort=if-desc/);
+	// Close matches come first, then a divider, then loose fuzzy matches; each group is sorted on its own.
+	const divider = page.getByTestId('results-divider');
+	await expect(divider).toHaveText('Other matches');
+	const sortedDesc = (xs: number[]) => expect(xs).toEqual([...xs].sort((a, b) => b - a));
 	await expect(async () => {
-		const counts = (await page.getByRole('listitem').allInnerTexts()).slice(0, 10).map(ifaces);
-		expect(counts).toEqual([...counts].sort((a, b) => b - a));
+		const above = await divider.evaluate((d) => [...d.parentElement!.children].slice(0, [...d.parentElement!.children].indexOf(d)).map((e) => (e as HTMLElement).innerText));
+		const below = await divider.evaluate((d) => [...d.parentElement!.children].slice([...d.parentElement!.children].indexOf(d) + 1, [...d.parentElement!.children].indexOf(d) + 11).map((e) => (e as HTMLElement).innerText));
+		expect(above.length).toBeGreaterThan(0);
+		sortedDesc(above.map(ifaces));
+		sortedDesc(below.map(ifaces));
 	}).toPass();
+
+	// No divider without a sort.
+	await page.getByRole('combobox', { name: 'Sort results' }).selectOption('best');
+	await expect(divider).toHaveCount(0);
+	await page.getByRole('combobox', { name: 'Sort results' }).selectOption('if-desc');
+	await expect(page).toHaveURL(/sort=if-desc/);
 
 	await page.reload();
 	await expect(page.getByRole('combobox', { name: 'Sort results' })).toHaveValue('if-desc');

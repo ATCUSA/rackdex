@@ -72,8 +72,10 @@ describe('sorting', () => {
 			{ ...rec('hit', 'Cisco', 'Catalyst 9300-48P', 'C9300-48P'), counts: { interfaces: 52 } },
 			{ ...rec('hit2', 'Cisco', 'Catalyst 9300-48P-E', 'C9300-48P-E'), counts: { interfaces: 54 } }
 		]);
-		const res = e2.run('C9300-48P', emptyFilters(), 'if-desc').ids;
-		expect(res.slice(0, 2)).toEqual(['hit2', 'hit']);
+		const res = e2.run('C9300-48P', emptyFilters(), 'if-desc');
+		expect(res.ids.slice(0, 2)).toEqual(['hit2', 'hit']);
+		expect(res.split).toBe(res.ids.length > 2 ? 2 : undefined);
+		expect(e2.run('C9300-48P', emptyFilters()).split).toBeUndefined();
 	});
 
 	test('sorting a query result reorders only the matches', () => {
