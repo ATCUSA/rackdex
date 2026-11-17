@@ -1,5 +1,6 @@
 import type { Filters } from './filters';
 import type { SearchResult, WorkerRequest, WorkerResponse } from './search';
+import type { Sort } from './sort';
 import type { IndexRecord } from './types';
 
 export class SearchClient {
@@ -29,7 +30,7 @@ export class SearchClient {
 			}
 			const resolve = this.#pending.get(msg.id);
 			this.#pending.delete(msg.id);
-			resolve?.(msg.id === this.#querySeq ? { ids: msg.ids, facets: msg.facets } : null);
+			resolve?.(msg.id === this.#querySeq ? { ids: msg.ids, facets: msg.facets, split: msg.split } : null);
 		};
 		this.#worker.onerror = () => {
 			this.#failed = true;
@@ -47,7 +48,7 @@ export class SearchClient {
 		return ready;
 	}
 
-	async query(q: string, filters: Filters): Promise<SearchResult | null> {
+	async query(q: string, filters: Filters, sort: Sort = 'best'): Promise<SearchResult | null> {
 		if (this.#failed) return null;
 		if (!this.#ready) return null; // never initialised — nothing to query yet
 		await this.#ready;
@@ -57,7 +58,7 @@ export class SearchClient {
 		const plain = JSON.parse(JSON.stringify(filters)) as Filters;
 		return new Promise((resolve) => {
 			this.#pending.set(id, resolve);
-			this.#send({ type: 'query', id, q, filters: plain });
+			this.#send({ type: 'query', id, q, filters: plain, sort });
 		});
 	}
 

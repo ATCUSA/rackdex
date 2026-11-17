@@ -1,6 +1,7 @@
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 import { emptyFilters } from './filters';
 import { createSearch } from './search';
+import type { Sort } from './sort';
 import type { IndexRecord } from './types';
 
 const rec = (id: string, vendor: string, model: string, partNumber?: string, kind: IndexRecord['kind'] = 'device'): IndexRecord => ({
@@ -41,4 +42,43 @@ test('filters apply to query results and facets reflect the query', () => {
 	// kinds facet ignores the kind filter, so devices matching '9300' are still counted
 	expect(res.facets.kinds.module).toBe(1);
 	expect(res.facets.kinds.device).toBeGreaterThanOrEqual(1);
+});
+
+describe('sorting', () => {
+	const sized = [
+		{ ...rec('a', 'Cisco', 'A'), uHeight: 2, counts: { interfaces: 10 } },
+		{ ...rec('b', 'Arista', 'B'), uHeight: 1, counts: { interfaces: 52 } },
+		{ ...rec('c', 'Dell', 'C') },
+		{ ...rec('d', 'Cisco', 'D'), uHeight: 1, counts: { interfaces: 4 } }
+	];
+	const e = createSearch(sized);
+	const ids = (sort: Sort) => e.run('', emptyFilters(), sort).ids;
+
+	test('best and name keep vendor/model order with no query', () => {
+		expect(ids('best')).toEqual(['b', 'a', 'd', 'c']);
+		expect(ids('name')).toEqual(['b', 'a', 'd', 'c']);
+	});
+
+	test('numeric sorts put missing values last in both directions, ties keep name order', () => {
+		expect(ids('u-asc')).toEqual(['b', 'd', 'a', 'c']);
+		expect(ids('u-desc')).toEqual(['a', 'b', 'd', 'c']);
+		expect(ids('if-desc')).toEqual(['b', 'a', 'd', 'c']);
+		expect(ids('if-asc')).toEqual(['d', 'a', 'b', 'c']);
+	});
+
+	test('with a query, literal matches stay above fuzzy-only ones', () => {
+		const e2 = createSearch([
+			{ ...rec('big', 'Juniper', 'EX2300-48MP'), counts: { interfaces: 60 } },
+			{ ...rec('hit', 'Cisco', 'Catalyst 9300-48P', 'C9300-48P'), counts: { interfaces: 52 } },
+			{ ...rec('hit2', 'Cisco', 'Catalyst 9300-48P-E', 'C9300-48P-E'), counts: { interfaces: 54 } }
+		]);
+		const res = e2.run('C9300-48P', emptyFilters(), 'if-desc');
+		expect(res.ids.slice(0, 2)).toEqual(['hit2', 'hit']);
+		expect(res.split).toBe(res.ids.length > 2 ? 2 : undefined);
+		expect(e2.run('C9300-48P', emptyFilters()).split).toBeUndefined();
+	});
+
+	test('sorting a query result reorders only the matches', () => {
+		expect(e.run('cisco', emptyFilters(), 'if-asc').ids).toEqual(['d', 'a']);
+	});
 });

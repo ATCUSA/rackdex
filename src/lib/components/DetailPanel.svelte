@@ -8,6 +8,7 @@
 	import { toast } from '#lib/toast.svelte';
 	import { COMPONENT_LABELS, IMPORT_HINTS, KIND_LABELS, type ComponentKey, type IndexRecord } from '#lib/types';
 	import { modal } from '#lib/modal';
+	import { interfaceBreakdown } from '#lib/ports';
 	import { fetchYaml, yamlFilename } from '#lib/yamlExport';
 	import ManufacturerHelper from './ManufacturerHelper.svelte';
 	import YamlView from './YamlView.svelte';
@@ -55,6 +56,8 @@
 		).filter((row): row is [string, string] => row[1] !== undefined)
 	);
 	const components = $derived(Object.entries(r.counts) as [ComponentKey, number][]);
+	const ports = $derived(yaml ? interfaceBreakdown(yaml) : null);
+	const changed = $derived(data.changed[r.id]);
 	const images = $derived(
 		(['front', 'rear'] as const)
 			.map((side) => ({ side, path: r.images[side] }))
@@ -90,6 +93,11 @@
 			<p class="text-xs text-zinc-500">{r.vendor} · {KIND_LABELS[r.kind]}</p>
 			<h2 class="truncate text-lg font-semibold">{r.model}</h2>
 			{#if r.partNumber && r.partNumber !== r.model}<p class="text-sm text-zinc-500">{r.partNumber}</p>{/if}
+			{#if changed}
+				<p data-testid="changed-note" class="mt-1 text-xs text-sky-700 dark:text-sky-300">
+					{changed === 'new' ? 'Added to' : 'Changed in'} the library since this site was built. This is the live version.
+				</p>
+			{/if}
 		</div>
 		<button type="button" class="rounded p-1 hover:bg-zinc-200 dark:hover:bg-zinc-800" aria-label="Close" onclick={onclose}>
 			<X class="size-5" />
@@ -122,6 +130,29 @@
 						<li class="flex justify-between gap-2"><span class="text-zinc-500">{COMPONENT_LABELS[k]}</span><span class="tabular-nums">{n}</span></li>
 					{/each}
 				</ul>
+			</section>
+		{/if}
+
+		{#if ports?.length}
+			<section>
+				<h3 class="mb-2 text-sm font-semibold">Interfaces by type</h3>
+				<table class="w-full text-sm" data-testid="port-breakdown">
+					<thead class="text-left text-xs text-zinc-500">
+						<tr><th class="pb-1 font-normal">Count</th><th class="pb-1 font-normal">Type</th><th class="pb-1 font-normal">Speed</th><th class="pb-1 font-normal">Notes</th></tr>
+					</thead>
+					<tbody>
+						{#each ports as p (p.type)}
+							<tr>
+								<td class="pr-4 tabular-nums">{p.count}</td>
+								<td class="pr-4 font-mono text-xs break-all">{p.type}</td>
+								<td class="pr-4 text-zinc-500">{p.speed ?? 'virtual'}</td>
+								<td class="text-xs text-zinc-500">
+									{[p.poe ? `${p.poe} PoE` : '', p.mgmt ? `${p.mgmt} mgmt` : ''].filter(Boolean).join(', ')}
+								</td>
+							</tr>
+						{/each}
+					</tbody>
+				</table>
 			</section>
 		{/if}
 

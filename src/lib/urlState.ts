@@ -1,10 +1,13 @@
 import { CATEGORIES } from './category';
 import { emptyFilters, type Filters } from './filters';
+import { SORTS, type Sort } from './sort';
 
 export interface UrlState {
 	q: string;
 	filters: Filters;
 	open?: string;
+	/** Omitted means 'best'. */
+	sort?: Sort;
 }
 
 const LISTS = { kinds: 'kind', vendors: 'vendor', categories: 'cat', airflows: 'airflow', speeds: 'speed' } as const;
@@ -30,6 +33,7 @@ export function toParams(s: UrlState): URLSearchParams {
 		const v = s.filters[key];
 		if (v !== undefined) p.set(param, v ? '1' : '0');
 	}
+	if (s.sort && s.sort !== 'best') p.set('sort', s.sort);
 	if (s.open) p.set('open', s.open);
 	return p;
 }
@@ -51,6 +55,8 @@ export function fromParams(p: Pick<URLSearchParams, 'get' | 'getAll'>): UrlState
 		else if (raw === '0') filters[key] = false;
 	}
 	const state: UrlState = { q: p.get('q') ?? '', filters };
+	const sort = p.get('sort');
+	if (sort && sort !== 'best' && (SORTS as readonly string[]).includes(sort)) state.sort = sort as Sort;
 	const open = p.get('open');
 	if (open) state.open = open;
 	return state;

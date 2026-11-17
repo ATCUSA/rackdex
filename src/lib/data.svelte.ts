@@ -1,6 +1,6 @@
 import { asset } from '$app/paths';
 import { get, set } from 'idb-keyval';
-import { fetchLive, type CacheStore, type LiveCache, type LiveStatus } from './live';
+import { fetchLive, type CacheStore, type Changed, type LiveCache, type LiveStatus } from './live';
 import type { IndexFile, IndexRecord } from './types';
 
 const CACHE_KEY = 'dtf-live-v1';
@@ -13,6 +13,8 @@ class DataStore {
 	index = $state.raw<IndexFile | null>(null);
 	error = $state<string | null>(null);
 	live = $state<LiveStatus>({ state: 'checking' });
+	/** Types the live update added or changed since the site was built. */
+	changed = $state.raw<Changed>({});
 	byId = $derived(new Map<string, IndexRecord>((this.index?.records ?? []).map((r) => [r.id, r])));
 
 	/** Commit SHA the displayed data corresponds to; used for raw YAML/image URLs. */
@@ -41,8 +43,9 @@ class DataStore {
 		}
 		this.index = baked;
 		try {
-			const { index, status } = await fetchLive(baked, { cache: idbCache });
+			const { index, status, changed } = await fetchLive(baked, { cache: idbCache });
 			if (index !== baked) this.index = index;
+			this.changed = changed;
 			this.live = status;
 		} catch (e) {
 			console.warn('[live]', e);

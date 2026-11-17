@@ -14,6 +14,6 @@ ctx.onmessage = (e) => {
 		engine = createSearch(msg.records);
 		post({ type: 'ready', id: msg.id });
 	} else if (msg.type === 'query' && engine) {
-		post({ type: 'result', id: msg.id, ...engine.run(msg.q, msg.filters) });
+		post({ type: 'result', id: msg.id, ...engine.run(msg.q, msg.filters, msg.sort) });
 	}
 };
