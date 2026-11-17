@@ -1,8 +1,8 @@
 # Cloudflare Workers static assets headers: https://developers.cloudflare.com/workers/static-assets/headers/
 # Not served itself. Other static hosts ignore it; set the equivalent headers there if you self-host.
 
-# The CSP only sets frame-ancestors for now: a full policy needs hashes for SvelteKit's inline bootstrap
-# and the theme script in app.html.
+# The full CSP is generated per page by SvelteKit (kit csp in vite.config.ts) as a <meta> tag with script
+# hashes. A meta CSP can't set frame-ancestors, so that directive stays here; browsers enforce both policies.
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

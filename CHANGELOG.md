@@ -18,6 +18,9 @@ All notable changes to RackDex are documented here. The format follows
 - CI and "library synced" badges in the README.
 - `_headers` file: long-lived caching for hashed `_app/immutable` assets, plus basic security headers
   (`nosniff`, referrer policy, permissions policy, no framing).
+- Content Security Policy on every page: scripts only from the site itself (SvelteKit's inline scripts and the
+  theme script are allowed by hash), network and images limited to the site and GitHub, no plugins. An e2e test
+  fails on any CSP violation.
 
 ### Changed
 
