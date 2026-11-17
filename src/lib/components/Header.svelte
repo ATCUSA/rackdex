@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { Moon, Search, ShoppingCart, Sun } from '@lucide/svelte';
+	import { Info, Moon, Search, ShoppingCart, Sun } from '@lucide/svelte';
+	import { page } from '$app/state';
 	import { cart } from '#lib/cart.svelte';
 	import { theme } from '#lib/theme.svelte';
 	import { ui } from '#lib/ui.svelte';
@@ -17,6 +18,11 @@
 		}
 	}
 	const iconBtn = 'relative rounded-lg p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800';
+	const NAV = [
+		{ href: '/', label: 'Search' },
+		{ href: '/about', label: 'About' }
+	];
+	const current = (href: string) => (page.url.pathname === href ? 'page' : undefined);
 </script>
 
 <svelte:window onkeydown={onKey} />
@@ -28,6 +34,17 @@
 			<img src="/mark-light.svg" alt="" class="size-7 dark:hidden" />
 			<span class="hidden sm:inline">Rack<span class="text-[#D18B00] dark:text-[#F3B11A]">Dex</span></span>
 		</a>
+		<nav aria-label="Main" class="hidden items-center gap-1 text-sm md:flex">
+			{#each NAV as item (item.href)}
+				<a
+					href={item.href}
+					aria-current={current(item.href)}
+					class="rounded-md px-2 py-1 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900 aria-[current=page]:font-medium aria-[current=page]:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:hover:text-zinc-100 dark:aria-[current=page]:text-zinc-100"
+				>
+					{item.label}
+				</a>
+			{/each}
+		</nav>
 		{#if showSearch}
 			<label class="relative flex-1">
 				<Search class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-zinc-400" />
@@ -44,6 +61,7 @@
 			<div class="flex-1"></div>
 		{/if}
 		<LiveBadge />
+		<a href="/about" class="{iconBtn} md:hidden" aria-label="About RackDex" aria-current={current('/about')}><Info class="size-5" /></a>
 		<RepoLink />
 		<button type="button" class={iconBtn} onclick={() => theme.toggle()} aria-label="Toggle theme">
 			{#if theme.dark}<Sun class="size-5" />{:else}<Moon class="size-5" />{/if}

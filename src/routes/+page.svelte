@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { LoaderCircle, SlidersHorizontal, X } from '@lucide/svelte';
 	import { onDestroy } from 'svelte';
+	import { browser } from '$app/env';
 	import { replaceState } from '$app/navigation';
 	import { page } from '$app/state';
 	import DetailPanel from '#lib/components/DetailPanel.svelte';
@@ -8,14 +9,18 @@
 	import Footer from '#lib/components/Footer.svelte';
 	import Header from '#lib/components/Header.svelte';
 	import ResultsList from '#lib/components/ResultsList.svelte';
+	import Seo from '#lib/components/Seo.svelte';
 	import { data } from '#lib/data.svelte';
-	import { activeFilterCount, emptyFacets, type Facets, type Filters } from '#lib/filters';
+	import { activeFilterCount, emptyFacets, emptyFilters, type Facets, type Filters } from '#lib/filters';
 	import { REPO_URL } from '#lib/github';
 	import { SearchClient } from '#lib/searchClient';
+	import { SITE_NAME, SITE_URL } from '#lib/site';
 	import type { IndexRecord } from '#lib/types';
 	import { fromParams, toParams } from '#lib/urlState';
 
-	const initial = fromParams(page.url.searchParams);
+	// Query parameters don't exist at prerender time, so the prerendered HTML is always the empty search;
+	// the browser picks up ?q=, filters and ?open= on hydration.
+	const initial = browser ? fromParams(page.url.searchParams) : { q: '', filters: emptyFilters(), open: undefined };
 	let query = $state(initial.q);
 	let filters = $state<Filters>(initial.filters);
 	let openId = $state<string | undefined>(initial.open);
@@ -26,20 +31,20 @@
 	let engineVersion = $state(0);
 	let searchError = $state<string | null>(null);
 
-	const client = new SearchClient();
-	client.onerror = () => (searchError = 'Search engine failed to start');
-	onDestroy(() => client.destroy());
+	const client = browser ? new SearchClient() : null;
+	if (client) client.onerror = () => (searchError = 'Search engine failed to start');
+	onDestroy(() => client?.destroy());
 
 	// (Re)build the search engine whenever the index changes (baked, then live).
 	$effect(() => {
 		const idx = data.index;
-		if (!idx) return;
+		if (!idx || !client) return;
 		client.init(idx.records).then(() => engineVersion++);
 	});
 
 	// Run the search on any query/filter change (debounced).
 	$effect(() => {
-		if (engineVersion === 0) return;
+		if (engineVersion === 0 || !client) return;
 		const q = query;
 		const f = JSON.parse(JSON.stringify(filters)) as Filters;
 		searching = true;
@@ -71,7 +76,22 @@
 	const open = (r: IndexRecord) => (openId = r.id);
 </script>
 
-<svelte:head><title>RackDex — NetBox device type search</title></svelte:head>
+<Seo
+	title="RackDex — Search the NetBox Device Type Library"
+	description="Search 16,000+ NetBox device, module and rack types from 450+ vendors, check specs and rack elevation images, and copy import-ready YAML in one click. Free, no account."
+	path="/"
+	jsonLd={{
+		'@context': 'https://schema.org',
+		'@type': 'WebApplication',
+		name: SITE_NAME,
+		url: `${SITE_URL}/`,
+		description: 'Search the NetBox Device Type Library and copy import-ready YAML for NetBox.',
+		applicationCategory: 'DeveloperApplication',
+		operatingSystem: 'Any (web browser)',
+		isAccessibleForFree: true,
+		offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' }
+	}}
+/>
 
 <div class="flex h-dvh flex-col">
 	<Header bind:query />
@@ -99,11 +119,13 @@
 				<button type="button" class="inline-flex items-center gap-1.5 rounded-md border border-zinc-300 px-2 py-1 lg:hidden dark:border-zinc-700" onclick={() => (showFilters = true)}>
 					<SlidersHorizontal class="size-4" /> Filters{#if activeFilterCount(filters)}&nbsp;({activeFilterCount(filters)}){/if}
 				</button>
-				<span data-testid="result-count" class="inline-flex items-center gap-1.5">
-					{#if searching}<LoaderCircle class="size-3.5 animate-spin" />{/if}
-					{results.length.toLocaleString()} of {(data.index?.records.length ?? 0).toLocaleString()} types
-				</span>
-				<a href={REPO_URL} target="_blank" rel="noopener" class="ml-auto truncate text-xs hover:text-sky-500">
+				{#if data.index}
+					<span data-testid="result-count" class="inline-flex items-center gap-1.5">
+						{#if searching}<LoaderCircle class="size-3.5 animate-spin" />{/if}
+						{results.length.toLocaleString()} of {data.index.records.length.toLocaleString()} types
+					</span>
+				{/if}
+				<a href={REPO_URL} target="_blank" rel="noopener" class="ml-auto hidden truncate text-xs hover:text-sky-500 sm:block">
 					Data: netbox-community/devicetype-library
 				</a>
 			</div>
@@ -119,7 +141,26 @@
 						<button type="button" class="mt-2 text-sky-500 hover:underline" onclick={() => location.reload()}>Retry</button>
 					</div>
 				{:else if !data.index}
-					<p class="m-6 inline-flex items-center gap-2 text-sm text-zinc-500"><LoaderCircle class="size-4 animate-spin" /> Loading index…</p>
+					<!-- Also the prerendered content: what crawlers and no-JS visitors see. -->
+					<section class="mx-auto max-w-2xl space-y-4 p-6 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+						<h1 class="text-xl font-semibold text-zinc-900 dark:text-zinc-100">Search the NetBox Device Type Library</h1>
+						<p>
+							RackDex searches every device, module and rack type in the community
+							<a class="text-sky-600 hover:underline dark:text-sky-400" href={REPO_URL}>NetBox Device Type Library</a>: switches,
+							routers, firewalls, servers, PDUs, patch panels, line cards and other modules, and rack types from
+							Cisco, Juniper, Arista, HPE, Dell, Ubiquiti, Fortinet, Palo Alto Networks, APC and hundreds more.
+						</p>
+						<p>
+							Type a model or part number such as <code>C9300-48P</code> or <code>EX4300-48T</code>, filter by rack units,
+							port speed, PoE, airflow or interface count, then copy the YAML and paste it into NetBox's device type import.
+							You can also export many types at once as one multi-document YAML file.
+						</p>
+						<p class="inline-flex items-center gap-2 text-zinc-500">
+							<LoaderCircle class="size-4 animate-spin" /> Loading the index…
+						</p>
+						<noscript><p>RackDex needs JavaScript to search. The library itself is on GitHub.</p></noscript>
+						<p><a class="text-sky-600 hover:underline dark:text-sky-400" href="/about">How RackDex works and how to import into NetBox</a></p>
+					</section>
 				{:else if results.length === 0 && !searching}
 					<p class="m-6 text-sm text-zinc-500">No types match. Try a shorter query or clear some filters.</p>
 				{:else}
