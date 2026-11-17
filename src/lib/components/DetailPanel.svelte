@@ -7,6 +7,7 @@
 	import { blobUrl, rawUrl } from '#lib/github';
 	import { toast } from '#lib/toast.svelte';
 	import { COMPONENT_LABELS, IMPORT_HINTS, KIND_LABELS, type ComponentKey, type IndexRecord } from '#lib/types';
+	import { modal } from '#lib/modal';
 	import { fetchYaml, yamlFilename } from '#lib/yamlExport';
 	import ManufacturerHelper from './ManufacturerHelper.svelte';
 	import YamlView from './YamlView.svelte';
@@ -76,9 +77,13 @@
 <svelte:window onkeydown={(e) => e.key === 'Escape' && onclose()} />
 
 <button type="button" class="fixed inset-0 z-40 bg-black/40" aria-label="Close details" onclick={onclose}></button>
-<aside
+<div
+	role="dialog"
+	aria-modal="true"
 	aria-label="Device type details"
-	class="fixed inset-y-0 right-0 z-50 flex w-full max-w-2xl flex-col border-l border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
+	tabindex="-1"
+	use:modal
+	class="fixed inset-y-0 right-0 z-50 flex w-full max-w-2xl flex-col border-l outline-none border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
 >
 	<div class="flex items-start gap-3 border-b border-zinc-200 p-4 dark:border-zinc-800">
 		<div class="min-w-0 flex-1">
@@ -166,4 +171,4 @@
 			</section>
 		{/if}
 	</div>
-</aside>
+</div>

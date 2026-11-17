@@ -5,6 +5,7 @@
 	import { data } from '#lib/data.svelte';
 	import { toast } from '#lib/toast.svelte';
 	import { IMPORT_HINTS, KIND_PLURAL, type IndexRecord, type Kind } from '#lib/types';
+	import { modal } from '#lib/modal';
 	import { ui } from '#lib/ui.svelte';
 	import { combineYaml, fetchYaml } from '#lib/yamlExport';
 	import ManufacturerHelper from './ManufacturerHelper.svelte';
@@ -84,9 +85,13 @@
 
 {#if ui.cartOpen}
 	<button type="button" class="fixed inset-0 z-40 bg-black/40" aria-label="Close selection" onclick={close}></button>
-	<aside
+	<div
+		role="dialog"
+		aria-modal="true"
 		aria-label="Selection"
-		class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
+		tabindex="-1"
+		use:modal
+		class="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l outline-none border-zinc-200 bg-white shadow-2xl dark:border-zinc-800 dark:bg-zinc-900"
 	>
 		<div class="flex items-center gap-3 border-b border-zinc-200 p-4 dark:border-zinc-800">
 			<h2 class="flex-1 text-lg font-semibold">Selection ({cart.count})</h2>
@@ -140,5 +145,5 @@
 				<ManufacturerHelper names={items.map((r) => r.vendor)} />
 			{/if}
 		</div>
-	</aside>
+	</div>
 {/if}

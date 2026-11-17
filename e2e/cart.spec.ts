@@ -11,7 +11,7 @@ test('select two device types and export them combined', async ({ page }) => {
 	await rows.nth(1).getByRole('button', { name: 'Add to selection' }).click();
 
 	await page.getByRole('button', { name: 'Open selection' }).click();
-	const drawer = page.getByRole('complementary', { name: 'Selection' });
+	const drawer = page.getByRole('dialog', { name: 'Selection' });
 	await expect(drawer.getByRole('heading', { name: 'Device types (2)' })).toBeVisible();
 
 	const [download] = await Promise.all([
@@ -35,7 +35,7 @@ test('selection persists across reloads and can be cleared', async ({ page }) =>
 	await page.getByRole('listitem').first().getByRole('button', { name: 'Add to selection' }).click();
 	await page.reload();
 	await page.getByRole('button', { name: 'Open selection' }).click();
-	const drawer = page.getByRole('complementary', { name: 'Selection' });
+	const drawer = page.getByRole('dialog', { name: 'Selection' });
 	await expect(drawer.getByRole('heading', { name: 'Device types (1)' })).toBeVisible();
 	await drawer.getByRole('button', { name: 'Clear all' }).click();
 	await expect(drawer.getByText('Nothing selected yet')).toBeVisible();

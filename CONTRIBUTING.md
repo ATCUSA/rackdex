@@ -36,7 +36,7 @@ committed. Run `pnpm index` any time you want fresh data.
 Run all of these before opening a pull request. CI runs the same ones.
 
 ```bash
-pnpm check          # svelte-check (types + Svelte diagnostics): 0 errors, 0 warnings
+pnpm check          # svelte-check (types + Svelte diagnostics): 0 errors, 0 warnings; builds the index first if missing
 pnpm test           # unit tests (Vitest)
 pnpm test:e2e       # browser tests (Playwright); first time: pnpm exec playwright install chromium
 ```
