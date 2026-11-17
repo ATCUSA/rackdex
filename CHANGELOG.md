@@ -32,6 +32,11 @@ All notable changes to RackDex are documented here. The format follows
 - The daily refresh workflow reads the deployed commit from `meta.json` instead of the full index, and runs
   `pnpm check` before deploying.
 
+- Pages are prerendered to real HTML (server rendering at build time) instead of an empty shell, so search engines
+  and link previews see the content. Each page has its own title, description and canonical URL, and the home page
+  has structured data (schema.org `WebApplication`) and an intro for crawlers and no-JS visitors.
+- Header navigation (Search, About); the About page gains an FAQ.
+
 ### Fixed
 
 - When the 15-minute update cache has expired and GitHub can't be reached or rate-limits you, RackDex keeps showing the

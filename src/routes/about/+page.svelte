@@ -1,12 +1,17 @@
 <script lang="ts">
 	import Footer from '#lib/components/Footer.svelte';
 	import Header from '#lib/components/Header.svelte';
+	import Seo from '#lib/components/Seo.svelte';
 	import { REPO_URL } from '#lib/github';
 
 	const link = 'text-sky-600 hover:underline dark:text-sky-400';
 </script>
 
-<svelte:head><title>About · RackDex</title></svelte:head>
+<Seo
+	title="About RackDex — importing NetBox device types, FAQ and credits"
+	description="How RackDex works, how to import device, module and rack types into NetBox from YAML, answers to common import errors, and credit to the NetBox Device Type Library contributors."
+	path="/about"
+/>
 
 <div class="flex min-h-dvh flex-col">
 	<Header showSearch={false} />
@@ -42,6 +47,41 @@
 				always fetched straight from GitHub. If GitHub rate-limits the check, the site keeps working with the deployed data.
 			</p>
 			<p>Categories (switch, PDU, patch panel, …) are inferred from each type's components — the library doesn't define them.</p>
+		</section>
+
+		<section class="space-y-3">
+			<h2 class="text-lg font-semibold">FAQ</h2>
+			<div>
+				<h3 class="font-semibold">NetBox says the manufacturer doesn't exist</h3>
+				<p>
+					NetBox matches a device type's <code>manufacturer</code> by its exact name, and the manufacturer must already exist.
+					Create it first under Devices → Manufacturers, using the name from the manufacturer helper.
+					<code>Hewlett Packard Enterprise</code> and <code>HPE</code> are different manufacturers to NetBox.
+				</p>
+			</div>
+			<div>
+				<h3 class="font-semibold">Can I import many device types at once?</h3>
+				<p>
+					Yes. Add types to your selection, then use Copy combined or Download combined. You get one YAML file with every type
+					separated by <code>---</code>, which NetBox's import page accepts in one go. The selection also gives you a
+					manufacturer CSV for Devices → Manufacturers → Import.
+				</p>
+			</div>
+			<div>
+				<h3 class="font-semibold">What does the PoE filter mean?</h3>
+				<p>
+					Devices that supply PoE (PSE), such as PoE switches and injectors. Devices that only draw PoE, like access points and
+					phones, don't count.
+				</p>
+			</div>
+			<div>
+				<h3 class="font-semibold">A device is missing or has wrong data</h3>
+				<p>
+					RackDex only displays the library. Please fix it upstream with a pull request to the
+					<a class={link} href={`${REPO_URL}/blob/master/CONTRIBUTING.md`} target="_blank" rel="noopener">devicetype-library</a>;
+					it shows up here automatically once merged.
+				</p>
+			</div>
 		</section>
 
 		<Footer />
