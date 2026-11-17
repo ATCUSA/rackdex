@@ -36,6 +36,9 @@ export interface LiveCache {
 	texts: Record<string, string>;
 }
 
+/** Types the live update added or changed since the baked index, by id. */
+export type Changed = Record<string, 'new' | 'updated'>;
+
 export interface CacheStore {
 	get(): Promise<LiveCache | undefined>;
 	set(v: LiveCache): Promise<void>;
@@ -61,7 +64,7 @@ export function applyDelta(
 	index: IndexFile,
 	plan: DeltaPlan,
 	texts: Record<string, string>
-): { index: IndexFile; errors: string[] } {
+): { index: IndexFile; errors: string[]; applied: string[] } {
 	const images = new Set(index.imagePaths);
 	for (const p of plan.imageRemoves) images.delete(p);
 	for (const p of plan.imageAdds) images.add(p);
@@ -70,6 +73,7 @@ export function applyDelta(
 	for (const id of plan.removes) byId.delete(id);
 
 	const errors: string[] = [];
+	const applied: string[] = [];
 	for (const id of plan.upserts) {
 		const text = texts[id];
 		if (text === undefined) {
@@ -78,6 +82,7 @@ export function applyDelta(
 		}
 		try {
 			byId.set(id, parseRecord(id, text, images));
+			applied.push(id);
 		} catch (e) {
 			errors.push((e as Error).message);
 		}
@@ -95,7 +100,8 @@ export function applyDelta(
 
 	return {
 		index: { meta: { ...index.meta, counts }, records, imagePaths: [...images].sort() },
-		errors
+		errors,
+		applied
 	};
 }
 
@@ -117,18 +123,22 @@ interface CompareBody {
 export async function fetchLive(
 	index: IndexFile,
 	opts: { fetchFn?: typeof fetch; cache?: CacheStore; now?: () => number } = {}
-): Promise<{ index: IndexFile; status: LiveStatus }> {
+): Promise<{ index: IndexFile; status: LiveStatus; changed: Changed }> {
 	const fetchFn = opts.fetchFn ?? fetch;
 	const now = opts.now ?? Date.now;
 	const base = index.meta.sha;
 
-	const stale = (reason: string) => ({ index, status: { state: 'stale', reason } as LiveStatus });
+	const stale = (reason: string) => ({ index, status: { state: 'stale', reason } as LiveStatus, changed: {} });
 	const finish = (plan: DeltaPlan, texts: Record<string, string>, sha: string, date: string) => {
 		const changes = planSize(plan);
-		if (changes === 0) return { index, status: { state: 'current', sha, date } as LiveStatus };
+		if (changes === 0) return { index, status: { state: 'current', sha, date } as LiveStatus, changed: {} };
 		const out = applyDelta(index, plan, texts);
 		for (const e of out.errors) console.warn('[live]', e);
-		return { index: out.index, status: { state: 'live', sha, date, changes } as LiveStatus };
+		// Only types that actually parsed: a failed upsert keeps the baked record, which isn't new.
+		const baked = new Set(index.records.map((r) => r.id));
+		const changed: Changed = {};
+		for (const id of out.applied) changed[id] = baked.has(id) ? 'updated' : 'new';
+		return { index: out.index, status: { state: 'live', sha, date, changes } as LiveStatus, changed };
 	};
 
 	const cached = await opts.cache?.get().catch(() => undefined);
@@ -141,7 +151,7 @@ export async function fetchLive(
 	const failed = (reason: string) => {
 		if (!usable) return stale(reason);
 		const out = finish(usable.plan, usable.texts, usable.headSha, usable.headDate);
-		return { index: out.index, status: { ...out.status, recheckFailed: reason } as LiveStatus };
+		return { ...out, status: { ...out.status, recheckFailed: reason } as LiveStatus };
 	};
 
 	let res: Response;

@@ -18,7 +18,8 @@ test('round-trips full state', () => {
 			poe: true,
 			fullDepth: false
 		},
-		open: 'device-types/Cisco/C9300-48P.yaml'
+		open: 'device-types/Cisco/C9300-48P.yaml',
+		sort: 'if-desc' as const
 	};
 	expect(fromParams(toParams(state))).toEqual(state);
 });
@@ -34,4 +35,11 @@ test('drops invalid kinds, categories and numbers', () => {
 	expect(s.filters.categories).toEqual(['pdu']);
 	expect(s.filters.uMin).toBeUndefined();
 	expect(s.filters.ifMax).toBe(8);
+});
+
+test('sort: default is omitted, unknown values are dropped', () => {
+	expect(toParams({ q: '', filters: emptyFilters(), sort: 'best' }).toString()).toBe('');
+	expect(fromParams(new URLSearchParams('sort=best'))).toEqual({ q: '', filters: emptyFilters() });
+	expect(fromParams(new URLSearchParams('sort=bogus'))).toEqual({ q: '', filters: emptyFilters() });
+	expect(fromParams(new URLSearchParams('sort=u-asc')).sort).toBe('u-asc');
 });

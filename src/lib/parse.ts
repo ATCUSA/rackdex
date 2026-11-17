@@ -17,6 +17,16 @@ const MAX_COMMENT = 300;
 
 export class ParseError extends Error {}
 
+/**
+ * Whether an interface is a PoE *source* (PSE), not just PoE-capable: poe_mode: pse is a source, and a
+ * poe_type with no explicit poe_mode: pd is assumed a source too. poe_mode: pd (a powered device, e.g. an
+ * AP or phone port) is not.
+ */
+export function isPse(i: Record<string, unknown>): boolean {
+	const mode = str(i.poe_mode);
+	return mode === 'pse' || (i.poe_type !== undefined && mode !== 'pd');
+}
+
 export function kindFromPath(path: string): Kind | null {
 	const parts = path.split('/');
 	if (parts.length !== 3 || !/\.ya?ml$/i.test(parts[2])) return null;
@@ -96,11 +106,7 @@ export function parseRecord(path: string, text: string, images: Set<string>): In
 		if (!raw || typeof raw !== 'object') continue;
 		const i = raw as Record<string, unknown>;
 		const type = str(i.type) ?? '';
-		// poe means PoE *source* (PSE), not just PoE-capable: an interface with poe_mode: pse is
-		// a source, and one with a poe_type but no explicit poe_mode: pd is assumed a source too.
-		// An interface with poe_mode: pd (a powered device, e.g. an AP or phone port) is not.
-		const poeMode = str(i.poe_mode);
-		if (poeMode === 'pse' || (i.poe_type !== undefined && poeMode !== 'pd')) poe = true;
+		if (isPse(i)) poe = true;
 		const g = speedGroup(type);
 		if (g) speeds.add(g);
 		if (isPhysical(type) && i.mgmt_only !== true) dataIfaces++;

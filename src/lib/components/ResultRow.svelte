@@ -2,6 +2,7 @@
 	import { Check, Image as ImageIcon, Plus } from '@lucide/svelte';
 	import { cart } from '#lib/cart.svelte';
 	import { CATEGORY_LABELS } from '#lib/category';
+	import { data } from '#lib/data.svelte';
 	import { KIND_LABELS, type IndexRecord } from '#lib/types';
 
 	let {
@@ -12,6 +13,7 @@
 	}: { record: IndexRecord; onopen: (r: IndexRecord) => void; selected?: boolean; height: number } = $props();
 
 	const inCart = $derived(cart.has(r.id));
+	const changed = $derived(data.changed[r.id]);
 	const topSpeed = $derived(r.speeds.filter((s) => s !== 'Wireless' && s !== 'Other').at(-1));
 	const specs = $derived(
 		[
@@ -59,6 +61,14 @@
 			</div>
 			<div class="truncate text-xs text-zinc-500">{[r.vendor, ...specs].join(' · ')}</div>
 		</div>
+		{#if changed}
+			<span
+				data-testid="changed-badge"
+				title="Changed in the library since this site was built; you're seeing the live version"
+				class="shrink-0 rounded-full bg-sky-500/15 px-2 py-0.5 text-xs whitespace-nowrap text-sky-700 dark:text-sky-300"
+				>{changed === 'new' ? 'New' : 'Updated'}</span
+			>
+		{/if}
 		<span
 			title={chipTitle}
 			aria-label={chipAriaLabel}

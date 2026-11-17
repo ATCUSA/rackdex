@@ -15,15 +15,17 @@
 	import { REPO_URL } from '#lib/github';
 	import { SearchClient } from '#lib/searchClient';
 	import { SITE_NAME, SITE_URL } from '#lib/site';
+	import { SORTS, SORT_LABELS, type Sort } from '#lib/sort';
 	import type { IndexRecord } from '#lib/types';
 	import { fromParams, toParams } from '#lib/urlState';
 
 	// Query parameters don't exist at prerender time, so the prerendered HTML is always the empty search;
 	// the browser picks up ?q=, filters and ?open= on hydration.
-	const initial = browser ? fromParams(page.url.searchParams) : { q: '', filters: emptyFilters(), open: undefined };
+	const initial = browser ? fromParams(page.url.searchParams) : { q: '', filters: emptyFilters(), open: undefined, sort: undefined };
 	let query = $state(initial.q);
 	let filters = $state<Filters>(initial.filters);
 	let openId = $state<string | undefined>(initial.open);
+	let sort = $state<Sort>(initial.sort ?? 'best');
 	let resultIds = $state.raw<string[]>([]);
 	let facets = $state.raw<Facets>(emptyFacets());
 	let searching = $state(true);
@@ -47,9 +49,10 @@
 		if (engineVersion === 0 || !client) return;
 		const q = query;
 		const f = JSON.parse(JSON.stringify(filters)) as Filters;
+		const s = sort;
 		searching = true;
 		const t = setTimeout(async () => {
-			const res = await client.query(q, f);
+			const res = await client.query(q, f, s);
 			if (!res) return;
 			resultIds = res.ids;
 			facets = res.facets;
@@ -60,7 +63,7 @@
 
 	// Mirror state into the URL (shareable links).
 	$effect(() => {
-		const qs = toParams({ q: query, filters, open: openId }).toString();
+		const qs = toParams({ q: query, filters, open: openId, sort }).toString();
 		const t = setTimeout(() => {
 			const url = new URL(location.href);
 			url.search = qs;
@@ -125,7 +128,19 @@
 						{results.length.toLocaleString()} of {data.index.records.length.toLocaleString()} types
 					</span>
 				{/if}
-				<a href={REPO_URL} target="_blank" rel="noopener" class="ml-auto hidden truncate text-xs hover:text-sky-500 sm:block">
+				{#if data.index}
+					<label class="ml-auto inline-flex shrink-0 items-center gap-1.5 text-xs">
+						<span class="hidden sm:inline">Sort</span>
+						<select
+							bind:value={sort}
+							aria-label="Sort results"
+							class="rounded-md border border-zinc-300 bg-transparent px-1.5 py-1 text-xs text-zinc-700 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-300"
+						>
+							{#each SORTS as s (s)}<option value={s}>{SORT_LABELS[s]}</option>{/each}
+						</select>
+					</label>
+				{/if}
+				<a href={REPO_URL} target="_blank" rel="noopener" class={['hidden truncate text-xs hover:text-sky-500 sm:block', !data.index && 'ml-auto']}>
 					Data: netbox-community/devicetype-library
 				</a>
 			</div>

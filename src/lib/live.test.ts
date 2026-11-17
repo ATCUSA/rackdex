@@ -109,6 +109,21 @@ describe('fetchLive', () => {
 		expect(cache.value?.texts[A]).toContain('A-live');
 	});
 
+	test('reports which types changed, new versus updated, skipping ones that failed to parse', async () => {
+		const files = [
+			{ filename: A, status: 'modified' },
+			{ filename: 'device-types/Cisco/new.yaml', status: 'added' },
+			{ filename: B, status: 'modified' }
+		];
+		const { fn } = fakeFetch((url) =>
+			url.includes('api.github.com')
+				? json({ ...aheadBody, files })
+				: new Response(url.endsWith('b.yaml') ? 'model: [bad' : 'manufacturer: Cisco\nmodel: X\n')
+		);
+		const out = await fetchLive(baked(), { fetchFn: fn, cache: memCache(), now: () => 1000 });
+		expect(out.changed).toEqual({ [A]: 'updated', 'device-types/Cisco/new.yaml': 'new' });
+	});
+
 	test('fresh cache skips the network entirely', async () => {
 		const cache = memCache({ baseSha: 'base', headSha: 'head1', headDate: 'd', checkedAt: 1000, plan: { upserts: [A], removes: [], imageAdds: [], imageRemoves: [] }, texts: { [A]: 'model: Cached\n' } });
 		const { fn, calls } = fakeFetch(() => {
@@ -140,6 +155,7 @@ describe('fetchLive', () => {
 		const out = await fetchLive(index, { fetchFn: fn, cache: memCache(), now: () => 1 });
 		expect(out.status).toEqual({ state: 'stale', reason });
 		expect(out.index).toBe(index);
+		expect(out.changed).toEqual({});
 	});
 
 	const expired = (): LiveCache => ({
@@ -160,6 +176,7 @@ describe('fetchLive', () => {
 		const out = await fetchLive(baked(), { fetchFn: fn, cache: memCache(expired()), now: () => CACHE_TTL_MS * 2 });
 		expect(out.status).toEqual({ state: 'live', sha: 'head1', date: 'd', changes: 1, recheckFailed: reason });
 		expect(out.index.records.find((r) => r.id === A)?.model).toBe('Cached');
+		expect(out.changed).toEqual({ [A]: 'updated' });
 	});
 
 	test('expired cache for a different base is not used on failure', async () => {
