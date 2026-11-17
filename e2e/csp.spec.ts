@@ -1,3 +1,4 @@
+import { readFile } from 'node:fs/promises';
 import { expect, test, type Page } from '@playwright/test';
 import { stubGitHub } from './helpers';
 
@@ -18,9 +19,13 @@ async function collectViolations(page: Page) {
 
 test.beforeEach(async ({ page }) => stubGitHub(page));
 
-test('prerendered pages carry the CSP meta tag', async ({ request }) => {
-	for (const p of ['/', '/about']) {
-		const html = await (await request.get(p)).text();
+test('prerendered pages and the 404 fallback carry the CSP meta tag', async ({ request }) => {
+	const pages: [string, string][] = [];
+	for (const p of ['/', '/about']) pages.push([p, await (await request.get(p)).text()]);
+	// Cloudflare serves build/404.html for unknown URLs, but vite preview renders its own error page with the
+	// policy as a header instead, so check the deployed file directly.
+	pages.push(['404.html', await readFile('build/404.html', 'utf8')]);
+	for (const [p, html] of pages) {
 		const csp = html.match(/<meta http-equiv="content-security-policy" content="([^"]+)"/)?.[1];
 		expect(csp, p).toContain("script-src 'self' 'sha256-");
 		expect(csp, p).toContain("object-src 'none'");
