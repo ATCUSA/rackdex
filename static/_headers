@@ -1,0 +1,17 @@
+# Cloudflare Workers static assets headers: https://developers.cloudflare.com/workers/static-assets/headers/
+# Not served itself. Other static hosts ignore it; set the equivalent headers there if you self-host.
+
+# The CSP only sets frame-ancestors for now: a full policy needs hashes for SvelteKit's inline bootstrap
+# and the theme script in app.html.
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+  Content-Security-Policy: frame-ancestors 'none'
+  X-Frame-Options: DENY
+
+# SvelteKit puts a content hash in every filename under _app/immutable, so these can be cached forever.
+# Detach the default Cache-Control first so the two values aren't comma-joined.
+/_app/immutable/*
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
