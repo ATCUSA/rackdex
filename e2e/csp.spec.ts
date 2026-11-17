@@ -49,7 +49,8 @@ test('no CSP violations across search, details, export, theme and navigation', a
 	// The theme script in app.html runs on load; flip to light and reload so its branch actually executes.
 	await page.getByRole('button', { name: 'Toggle theme' }).click();
 	await page.reload();
-	await expect(page.locator('html')).not.toHaveClass(/dark/);
+	// Soft, so a blocked theme script still reaches the violations check below and reports why.
+	await expect.soft(page.locator('html')).not.toHaveClass(/dark/);
 
 	await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'About' }).click();
 	await expect(page.getByRole('heading', { level: 1 })).toHaveText('About');
