@@ -7,5 +7,8 @@
 		"directory": "./build",
 		// Unknown URLs get build/404.html (the SvelteKit fallback, which renders the error page) with a 404 status.
 		"not_found_handling": "404-page"
-	}
+	},
+	// Required by `wrangler preview`, which Workers Builds runs for non-production branches (PR previews).
+	// Empty because previews use the same static assets and there are no bindings to override.
+	"previews": {}
 }
