@@ -7,7 +7,7 @@ test('open a type, copy its YAML, see manufacturer helper, close with Escape', a
 	await page.goto('/?q=C9300-48P&kind=device');
 	await page.getByRole('listitem').first().getByRole('button', { name: /9300/ }).click();
 
-	const panel = page.getByRole('complementary', { name: 'Device type details' });
+	const panel = page.getByRole('dialog', { name: 'Device type details' });
 	await expect(panel).toBeVisible();
 	await expect(page).toHaveURL(/open=device-types/);
 	await expect(panel.getByText('manufacturer: Test')).toBeVisible();
@@ -26,5 +26,24 @@ test('open a type, copy its YAML, see manufacturer helper, close with Escape', a
 
 test('deep link opens the panel directly', async ({ page }) => {
 	await page.goto('/?open=device-types%2FCisco%2FC9300-48P.yaml');
-	await expect(page.getByRole('complementary', { name: 'Device type details' })).toContainText('Catalyst 9300-48P');
+	await expect(page.getByRole('dialog', { name: 'Device type details' })).toContainText('Catalyst 9300-48P');
+});
+
+test('the panel takes focus, keeps Tab inside it, and gives focus back on close', async ({ page }) => {
+	await page.goto('/?q=C9300-48P&kind=device');
+	const opener = page.getByRole('listitem').first().getByRole('button', { name: /9300/ });
+	await opener.click();
+
+	const panel = page.getByRole('dialog', { name: 'Device type details' });
+	await expect(panel).toBeFocused();
+
+	// Far more presses than the panel has controls: focus must never leave it.
+	for (let i = 0; i < 40; i++) {
+		await page.keyboard.press(i % 3 === 0 ? 'Shift+Tab' : 'Tab');
+		expect(await panel.evaluate((el) => el.contains(document.activeElement))).toBe(true);
+	}
+
+	await page.keyboard.press('Escape');
+	await expect(panel).toBeHidden();
+	await expect(opener).toBeFocused();
 });

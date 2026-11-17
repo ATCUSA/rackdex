@@ -26,6 +26,17 @@ All notable changes to RackDex are documented here. The format follows
 - Update dependencies (SvelteKit 3.2, Vite 8.3.8, Playwright 1.65, Vitest 5.1, Tailwind 4.3.5, Lucide 1.73), which
   clears all `pnpm audit` advisories.
 - README: refresh library size figures (16k+ types, 450+ vendors, ~8 MB index).
+- The detail panel and selection drawer are now proper modal dialogs: they take focus when opened, keep Tab
+  inside, and return focus to where you were when closed.
+- `pnpm check` builds the index first if it's missing, so it works on a fresh clone.
+- The daily refresh workflow reads the deployed commit from `meta.json` instead of the full index, and runs
+  `pnpm check` before deploying.
+
+### Fixed
+
+- When the 15-minute update cache has expired and GitHub can't be reached or rate-limits you, RackDex keeps showing the
+  last successfully fetched upstream changes instead of falling back to the older deployed data.
+- PR preview builds on Cloudflare Workers Builds (added the `previews` block that `wrangler preview` requires).
 
 ## [0.1.0] - 2026-09-30
 

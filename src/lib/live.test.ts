@@ -142,6 +142,34 @@ describe('fetchLive', () => {
 		expect(out.index).toBe(index);
 	});
 
+	const expired = (): LiveCache => ({
+		baseSha: 'base',
+		headSha: 'head1',
+		headDate: 'd',
+		checkedAt: 0,
+		plan: { upserts: [A], removes: [], imageAdds: [], imageRemoves: [] },
+		texts: { [A]: 'model: Cached\n' }
+	});
+
+	test.each([
+		['rate limited', () => json({ message: 'rate limit' }, 403), 'GitHub rate limit reached'],
+		['server error', () => json({}, 500), 'GitHub responded 500'],
+		['network error', () => { throw new TypeError('offline'); }, 'network error']
+	])('%s with an expired cache → last cached result, flagged', async (_, handler, reason) => {
+		const { fn } = fakeFetch(handler as Handler);
+		const out = await fetchLive(baked(), { fetchFn: fn, cache: memCache(expired()), now: () => CACHE_TTL_MS * 2 });
+		expect(out.status).toEqual({ state: 'live', sha: 'head1', date: 'd', changes: 1, recheckFailed: reason });
+		expect(out.index.records.find((r) => r.id === A)?.model).toBe('Cached');
+	});
+
+	test('expired cache for a different base is not used on failure', async () => {
+		const index = baked();
+		const { fn } = fakeFetch(() => json({}, 500));
+		const out = await fetchLive(index, { fetchFn: fn, cache: memCache({ ...expired(), baseSha: 'older' }), now: () => CACHE_TTL_MS * 2 });
+		expect(out.status).toEqual({ state: 'stale', reason: 'GitHub responded 500' });
+		expect(out.index).toBe(index);
+	});
+
 	test('raw fetch failure → stale', async () => {
 		const { fn } = fakeFetch((url) => (url.includes('api.github.com') ? json(aheadBody) : new Response('x', { status: 404 })));
 		const out = await fetchLive(baked(), { fetchFn: fn, cache: memCache(), now: () => 1 });

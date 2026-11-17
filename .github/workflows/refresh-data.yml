@@ -31,7 +31,8 @@ jobs:
         run: |
           upstream=$(git ls-remote https://github.com/netbox-community/devicetype-library.git refs/heads/master | cut -f1)
           [ -n "$upstream" ] || { echo "could not read upstream commit"; exit 1; }
-          deployed=$(curl -fsS https://rackdex.acole.dev/data/index.json | jq -r '.meta.sha' || echo unknown)
+          # meta.json is a few hundred bytes; index.json is ~8 MB.
+          deployed=$(curl -fsS https://rackdex.acole.dev/data/meta.json | jq -r '.sha' || echo unknown)
           echo "upstream: $upstream"
           echo "deployed: $deployed"
           if [ "$FORCE" = "true" ] || [ "$upstream" != "$deployed" ]; then
@@ -62,6 +63,7 @@ jobs:
       - name: Build index
         run: pnpm index
 
+      - run: pnpm check
       - run: pnpm test
 
       - name: Install Playwright browser

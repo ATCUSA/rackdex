@@ -21,8 +21,10 @@ export interface DeltaPlan {
 
 export type LiveStatus =
 	| { state: 'checking' }
-	| { state: 'current'; sha: string; date: string }
-	| { state: 'live'; sha: string; date: string; changes: number }
+	// recheckFailed: the cache had expired and re-checking GitHub failed for this reason, so this is the
+	// last successful check's result rather than a fresh one.
+	| { state: 'current'; sha: string; date: string; recheckFailed?: string }
+	| { state: 'live'; sha: string; date: string; changes: number; recheckFailed?: string }
 	| { state: 'stale'; reason: string };
 
 export interface LiveCache {
@@ -134,17 +136,24 @@ export async function fetchLive(
 	if (usable && now() - usable.checkedAt < CACHE_TTL_MS) {
 		return finish(usable.plan, usable.texts, usable.headSha, usable.headDate);
 	}
+	// GitHub couldn't be checked: an expired cache for this base is still closer to upstream than the
+	// baked index, so prefer it. The cache is only written after every changed file was fetched.
+	const failed = (reason: string) => {
+		if (!usable) return stale(reason);
+		const out = finish(usable.plan, usable.texts, usable.headSha, usable.headDate);
+		return { index: out.index, status: { ...out.status, recheckFailed: reason } as LiveStatus };
+	};
 
 	let res: Response;
 	try {
 		res = await fetchFn(compareUrl(base), { headers: { Accept: 'application/vnd.github+json' } });
 	} catch {
-		return stale('network error');
+		return failed('network error');
 	}
-	if (res.status === 403 || res.status === 429) return stale('GitHub rate limit reached');
-	if (!res.ok) return stale(`GitHub responded ${res.status}`);
+	if (res.status === 403 || res.status === 429) return failed('GitHub rate limit reached');
+	if (!res.ok) return failed(`GitHub responded ${res.status}`);
 	const body = (await res.json().catch(() => null)) as CompareBody | null;
-	if (!body) return stale('invalid response from GitHub');
+	if (!body) return failed('invalid response from GitHub');
 
 	if (body.status === 'identical') {
 		await opts.cache
@@ -177,7 +186,7 @@ export async function fetchLive(
 			}
 		);
 	} catch {
-		return stale('could not fetch changed files');
+		return failed('could not fetch changed files');
 	}
 
 	await opts.cache?.set({ baseSha: base, headSha, headDate, checkedAt: now(), plan, texts }).catch(() => {});

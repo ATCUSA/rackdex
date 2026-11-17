@@ -5,14 +5,19 @@
 	const short = (s: string) => s.slice(0, 7);
 	const fmt = (d: string) => new Date(d).toLocaleDateString();
 	const s = $derived(data.live);
+	const recheck = $derived(
+		(s.state === 'live' || s.state === 'current') && s.recheckFailed
+			? ` Couldn't re-check just now (${s.recheckFailed}), so this is from the last successful check.`
+			: ''
+	);
 	const title = $derived(
-		s.state === 'stale'
+		(s.state === 'stale'
 			? `${s.reason} — showing data built ${data.index ? fmt(data.index.meta.date) : ''}. Rebuild recommended.`
 			: s.state === 'live'
 				? `Built from ${data.index ? short(data.index.meta.sha) : ''}, ${s.changes} upstream change(s) applied live (now at ${short(s.sha)})`
 				: s.state === 'current'
 					? `Matches upstream master (${short(s.sha)}, ${fmt(s.date)})`
-					: 'Checking GitHub for upstream changes'
+					: 'Checking GitHub for upstream changes') + recheck
 	);
 </script>
 
