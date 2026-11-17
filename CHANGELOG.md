@@ -16,11 +16,16 @@ All notable changes to RackDex are documented here. The format follows
 - Link to the RackDex repo in the header (with its star count) and footer.
 - `data/meta.json` with the library commit, date and counts, used by the README's "library synced" badge.
 - CI and "library synced" badges in the README.
+- `_headers` file: long-lived caching for hashed `_app/immutable` assets, plus basic security headers
+  (`nosniff`, referrer policy, permissions policy, no framing).
 
 ### Changed
 
 - Upgrade to SvelteKit 3 and adapter-static 4. Config moved from `svelte.config.js` into `vite.config.ts`, and `$lib`
   imports are now `#lib`.
+- Update dependencies (SvelteKit 3.2, Vite 8.3.8, Playwright 1.65, Vitest 5.1, Tailwind 4.3.5, Lucide 1.73), which
+  clears all `pnpm audit` advisories.
+- README: refresh library size figures (16k+ types, 450+ vendors, ~8 MB index).
 
 ## [0.1.0] - 2026-09-30
 

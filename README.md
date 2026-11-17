@@ -28,8 +28,8 @@ then copy import-ready YAML into NetBox in one click.
 
 ---
 
-RackDex is a free, unofficial search tool for the community-maintained NetBox device type library: **about 13,000
-device, module and rack types from nearly 400 vendors**. Instead of browsing thousands of YAML files on GitHub, you type
+RackDex is a free, unofficial search tool for the community-maintained NetBox device type library: **over 16,000
+device, module and rack types from more than 450 vendors**. Instead of browsing thousands of YAML files on GitHub, you type
 `c9300 48p`, check the specs and rack images, and press **Copy**.
 
 It runs entirely in your browser: there are no accounts or tracking, and no server beyond static hosting.
@@ -136,7 +136,7 @@ more involved than pasting YAML.
 ## Self-hosting
 
 RackDex is a static site, so it runs on any static host. The build downloads the library's YAML (about 60 MB, cached
-in `.cache/`) and writes a ~6 MB search index. The rack images are never downloaded.
+in `.cache/`) and writes a ~8 MB search index. The rack images are never downloaded.
 
 **Requirements:** Node 22+ and [pnpm](https://pnpm.io) 11.
 
@@ -193,7 +193,7 @@ Cloudflare Pages, Netlify, GitHub Pages, nginx or any other static host work too
  build time                                  in your browser
 ┌───────────────────────────────┐ index.json ┌──────────────────────────────────┐
 │ sparse-clone YAML only (60 MB)│ ─────────▶ │ Web Worker: Fuse.js + filters    │
-│ parse 13k types → 6 MB index  │            │ 1 GitHub compare call → live Δ   │
+│ parse 16k types → 8 MB index  │            │ 1 GitHub compare call → live Δ   │
 │ skips 900 MB of images        │            │ YAML + images fetched from GitHub│
 └───────────────────────────────┘            └──────────────────────────────────┘
 ```
@@ -202,7 +202,7 @@ Cloudflare Pages, Netlify, GitHub Pages, nginx or any other static host work too
    `module-types/` and `rack-types/` folders, parses every YAML file into a compact record (specs, component counts,
    interface speeds, image paths), and writes `static/data/index.json` along with the commit it came from.
 2. **Search.** The browser loads the index and hands it to a Web Worker running [Fuse.js](https://fusejs.io), so
-   typing stays smooth across all 13k records.
+   typing stays smooth across all 16k+ records.
 3. **Stay current.** On load, RackDex asks GitHub's compare API what changed on `master` since the indexed commit,
    fetches only those files and merges them in. If that fails, it silently falls back to the indexed data.
 4. **Export.** YAML and images are always fetched straight from GitHub at the matching commit, so what you copy is
