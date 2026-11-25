@@ -29,6 +29,9 @@ test('prerendered pages and the 404 fallback carry the CSP meta tag', async ({ r
 		const csp = html.match(/<meta http-equiv="content-security-policy" content="([^"]+)"/)?.[1];
 		expect(csp, p).toContain("script-src 'self' 'sha256-");
 		expect(csp, p).toContain("object-src 'none'");
+		// Cloudflare injects the Web Analytics beacon in production, after the meta tag, so the policy must allow it.
+		expect(csp, p).toMatch(/script-src [^;]*https:\/\/static\.cloudflareinsights\.com/);
+		expect(csp, p).toMatch(/connect-src [^;]*https:\/\/cloudflareinsights\.com/);
 		// The policy only covers what comes after the meta tag, so it must precede every script.
 		expect(html.indexOf('http-equiv="content-security-policy"'), p).toBeLessThan(html.indexOf('<script'));
 	}
