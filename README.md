@@ -131,7 +131,7 @@ more involved than pasting YAML.
 - The hosted site uses [Cloudflare Web Analytics](https://www.cloudflare.com/web-analytics/) to count page views. It
   sets no cookies, uses no local storage and doesn't fingerprint visitors. It never sees your searches or selection,
   because those stay in the browser. Self-hosted copies don't include it.
-- Your browser talks only to the site itself, `cloudflareinsights.com` (the analytics beacon), `api.github.com` (one change check per visit, cached for 15 minutes,
+- Your browser talks only to the site itself, `static.cloudflareinsights.com` and `cloudflareinsights.com` (the analytics script and where it reports), `api.github.com` (one change check per visit, cached for 15 minutes,
   and the RackDex star count, cached for an hour) and `raw.githubusercontent.com` (YAML files and images).
 - Your selection, theme choice, the update cache and the star count are kept in your browser's local storage and are never sent
   anywhere.
