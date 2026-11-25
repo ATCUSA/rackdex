@@ -28,6 +28,8 @@ All notable changes to RackDex are documented here. The format follows
   detail panel saying you're seeing the live version.
 - "Interfaces by type" table in the detail panel: how many of each NetBox interface type, its speed, and how many
   are PoE sources or management-only. It's read from the YAML the panel already fetches, so the index doesn't grow.
+- Cookieless Cloudflare Web Analytics on the hosted site, injected by Cloudflare at the edge. The CSP allows its
+  beacon script and reporting endpoint, and the README's privacy section says what it does and doesn't collect.
 
 ### Changed
 

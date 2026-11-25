@@ -14,6 +14,10 @@ const appHtmlScriptHashes = [...readFileSync('src/app.html', 'utf8').matchAll(/<
 
 const GITHUB_RAW = 'https://raw.githubusercontent.com';
 const GITHUB_API = 'https://api.github.com';
+// Cloudflare Web Analytics, turned on in the dashboard (automatic setup), so Cloudflare injects the beacon into
+// production pages at the edge. The script loads from the first host and reports to the second.
+const CF_INSIGHTS_SCRIPT = 'https://static.cloudflareinsights.com';
+const CF_INSIGHTS_REPORT = 'https://cloudflareinsights.com';
 
 export default defineConfig({
 	plugins: [
@@ -27,13 +31,13 @@ export default defineConfig({
 				mode: 'hash',
 				directives: {
 					'default-src': ['self'],
-					'script-src': ['self', ...appHtmlScriptHashes],
+					'script-src': ['self', ...appHtmlScriptHashes, CF_INSIGHTS_SCRIPT],
 					'worker-src': ['self'],
 					// style="" attributes (app.html, Svelte's style: directives); stylesheets stay same-origin.
 					'style-src': ['self'],
 					'style-src-attr': ['unsafe-inline'],
-					// Live updates and stars from the GitHub API, YAML from raw.githubusercontent.com.
-					'connect-src': ['self', GITHUB_API, GITHUB_RAW],
+					// Live updates and stars from the GitHub API, YAML from raw.githubusercontent.com, analytics beacon.
+					'connect-src': ['self', GITHUB_API, GITHUB_RAW, CF_INSIGHTS_REPORT],
 					'img-src': ['self', 'data:', GITHUB_RAW],
 					'object-src': ['none'],
 					'base-uri': ['self'],
